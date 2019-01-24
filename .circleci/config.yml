@@ -1,0 +1,52 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/ruby:2.6.0-node-browsers
+      - image: circleci/postgres:9.5-alpine
+        environment:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DBNAME: db_name
+
+    working_directory: ~/repo
+
+    environment:
+      RACK_ENV: test
+      DATABASE_URL: "postgres://postgres:postgres@localhost:5432/db_name"
+
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "Gemfile.lock" }}
+          - v1-dependencies-
+
+      - run:
+          name: install dependencies
+          command: |
+            bundle install --jobs=4 --retry=3 --path vendor/bundle
+      - save_cache:
+          paths:
+            - ./vendor/bundle
+          key: v1-dependencies-{{ checksum "Gemfile.lock" }}
+
+      - run:
+          name: Wait for DB
+          command: dockerize -wait tcp://localhost:5432 -timeout 1m
+
+      - run: bundle exec rake db:migrate
+
+      - run:
+          name: run tests
+          command: |
+            mkdir /tmp/test-results
+            TEST_FILES="$(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)"
+            bundle exec rspec
+
+      - store_test_results:
+          path: /tmp/test-results
+      - store_artifacts:
+          path: /tmp/test-results
+          destination: test-results
