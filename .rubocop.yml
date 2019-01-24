@@ -1,0 +1,41 @@
+AllCops:
+  TargetRubyVersion: 2.6
+
+Style/Documentation:
+  Enabled: false
+
+Style/TrailingCommaInArguments:
+  EnforcedStyleForMultiline: comma
+
+Style/TrailingCommaInArrayLiteral:
+  EnforcedStyleForMultiline: comma
+
+Style/TrailingCommaInHashLiteral:
+  EnforcedStyleForMultiline: comma
+
+AllCops:
+  Exclude:
+    - '**/*.rake'
+    - 'Rakefile'
+
+Metrics/BlockLength:
+  Exclude:
+    - '**/*_spec.rb'
+
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+
+Style/LambdaCall:
+  EnforcedStyle: braces
+
+Layout/MultilineOperationIndentation:
+  EnforcedStyle: indented
+
+Style/RegexpLiteral:
+  EnforcedStyle: mixed
+
+Metrics/LineLength:
+  Max: 120
+
+Metrics/MethodLength:
+  Max: 50
