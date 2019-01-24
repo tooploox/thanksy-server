@@ -1,4 +1,4 @@
-require 'sequel/core'
+require "sequel/core"
 require "./boot"
 
 namespace :generate do
@@ -56,13 +56,13 @@ namespace :db do
 end
 
 def db_template_table
-  uri = URI(ENV['DATABASE_URL'])
+  uri = URI(db_url)
   uri.path = "/template1"
   uri.to_s
 end
 
 def db_name
-  uri = URI(ENV['DATABASE_URL'])
+  uri = URI(db_url)
   uri.path.split("/")[1].to_s
 end
 
@@ -71,5 +71,9 @@ def logger
 end
 
 def db
-  Sequel.connect(ENV.delete('DATABASE_URL'))
+  Sequel.connect(db_url)
+end
+
+def db_url
+  ENV["DATABASE_URL"]
 end
