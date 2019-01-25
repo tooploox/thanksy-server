@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
-require "./app"
+# This file is used by Rack-based servers to start the application.
 
-run App.freeze.app
+require_relative "config/environment"
+
+run Rails.application

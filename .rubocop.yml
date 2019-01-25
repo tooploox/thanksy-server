@@ -16,6 +16,7 @@ Style/TrailingCommaInHashLiteral:
 AllCops:
   Exclude:
     - '**/*.rake'
+    - 'bin/*'
     - 'Rakefile'
 
 Metrics/BlockLength:
