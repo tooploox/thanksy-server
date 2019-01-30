@@ -6,10 +6,12 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby "2.6.0"
 
 gem "bootsnap", ">= 1.1.0", require: false
+gem "faraday"
 gem "pg"
 gem "puma", "~> 3.11"
 gem "rails", "~> 5.2.2"
 gem "slack-ruby-client"
+gem "sucker_punch"
 
 group :development, :test do
   gem "dotenv-rails"

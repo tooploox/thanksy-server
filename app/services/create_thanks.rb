@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class CreateThanks
+  include SuckerPunch::Job
+
   class UserDoesNotExist < StandardError
   end
 
@@ -8,7 +10,7 @@ class CreateThanks
     @slack_client = slack_client
   end
 
-  def call(params)
+  def perform(params)
     thank_recivers = extract_recivers(params)
     creators_user_name = params[:user_name]
     creator = find_user(creators_user_name)
@@ -16,7 +18,7 @@ class CreateThanks
       find_user(user_name)
     end
     thanks = create_thanks(creator, users, params[:text])
-    SlackResponse.new.in_channel(creators_user_name, thanks)
+    respond_to_slack(params, creators_user_name, thanks)
   end
 
   private
@@ -55,5 +57,14 @@ class CreateThanks
       receivers: users.as_json,
       text: text,
     )
+  end
+
+  def respond_to_slack(params, creators_user_name, thanks)
+    response = SlackResponse.new.in_channel(creators_user_name, thanks)
+    Faraday.new.post do |req|
+      req.url params[:response_url]
+      req.headers["Content-Type"] = "application/json"
+      req.body = response.to_json
+    end
   end
 end

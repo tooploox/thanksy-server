@@ -8,7 +8,8 @@ class ThanksController < ApplicationController
   end
 
   def create
-    render json: CreateThanks.new.(params)
+    CreateThanks.perform_async(params)
+    render json: "Thanks created!"
   rescue CreateThanks::UserDoesNotExist => e
     render json: e.message
   end
