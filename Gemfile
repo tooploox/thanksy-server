@@ -9,8 +9,10 @@ gem "bootsnap", ">= 1.1.0", require: false
 gem "pg"
 gem "puma", "~> 3.11"
 gem "rails", "~> 5.2.2"
+gem "slack-ruby-client"
 
 group :development, :test do
+  gem "dotenv-rails"
   gem "pry"
   gem "rubocop", require: false
 end
@@ -22,7 +24,7 @@ group :development do
 end
 
 group :test do
-  gem "rspec"
+  gem "rspec-rails"
 end
 
 gem "tzinfo-data", platforms: %i[mingw mswin x64_mingw jruby]
