@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-  post "welcome/index"
+  get "thanks/list", to: "thanks#index"
+  post "thanks", to: "thanks#create"
+  post "thanks/react", to: "thanks#update"
 end
