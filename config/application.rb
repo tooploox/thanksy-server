@@ -15,7 +15,7 @@ require "rails/test_unit/railtie"
 
 Bundler.require(*Rails.groups)
 
-Dotenv::Railtie.load
+Dotenv::Railtie.load if %w[development test].include? ENV["RAILS_ENV"]
 
 module ThanksyServer
   class Application < Rails::Application
