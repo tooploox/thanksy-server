@@ -7,7 +7,7 @@ class SlackResponse
       text: "<@#{creators_user_name}> just sent a thanks",
       attachments: [
         {
-          text: thanks.text,
+          text: thanks.text.gsub(/@([\w.]+)/, '<@\1>'),
           fallback: "You are unable to choose a game",
           callback_id: "thanksy_response",
           color: "#e5e5e5",
