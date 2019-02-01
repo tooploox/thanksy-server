@@ -68,10 +68,12 @@ class CreateThanks
   end
 
   def create_thanks(creator, users, text)
+    parsed_text = text.scan(/<!subteam^.+|(@.+)>/).flatten
+    parsed_text = text if parsed_text.empty?
     Thanks.create(
       giver: creator.as_json.except("thanks_sent", "thanks_recived"),
       receivers: users.as_json.map { |r| r.except("thanks_sent", "thanks_recived") },
-      text: text,
+      text: parsed_text,
     )
   end
 
