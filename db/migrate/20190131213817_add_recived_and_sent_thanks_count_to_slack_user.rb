@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddRecivedAndSentThanksCountToSlackUser < ActiveRecord::Migration[5.2]
   def change
     add_column :slack_users, :thanks_sent, :integer, default: 0

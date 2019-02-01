@@ -17,7 +17,7 @@ class CreateThanks
       find_user_or_group_of_users(user_name)
     end.flatten
     creator.increment!(:thanks_sent)
-    recivers.each { |r| r.increment!(:thanks_recived)}
+    recivers.each { |r| r.increment!(:thanks_recived) }
     thanks = create_thanks(creator, recivers, params[:text])
     send_thanksy_to_slack(params, creators_user_name, thanks)
   rescue UserNotFound => e

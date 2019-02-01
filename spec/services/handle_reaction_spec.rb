@@ -47,7 +47,7 @@ describe HandleReaction do
     create_thanks_service.perform(thanks_request)
     thanks = Thanks.order(created_at: :desc).last
 
-    ["love", "clap", "confetti", "wow"].each do |reaction|
+    %w[love clap confetti wow].each do |reaction|
       thanks_reaction = thanks_reaction_params(reaction, thanks.id)
       service.(thanks_reaction)
     end
@@ -70,8 +70,8 @@ describe HandleReaction do
 
     expected_result = {
       "attachments" => [{
-        "actions" => SlackResponse.new.actions(thanks)
-      }]
+        "actions" => SlackResponse.new.actions(thanks),
+      }],
     }
 
     expect(result).to eq expected_result

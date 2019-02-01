@@ -36,7 +36,7 @@ module ParamsFactory
             },
           ],
         },
-      }.to_json
+      }.to_json,
     }
   end
 end
