@@ -26,7 +26,9 @@ group :development do
 end
 
 group :test do
+  gem "database_cleaner"
   gem "rspec-rails"
+  gem "timecop"
 end
 
 gem "tzinfo-data", platforms: %i[mingw mswin x64_mingw jruby]
