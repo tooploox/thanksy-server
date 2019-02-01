@@ -53,7 +53,7 @@ class CreateThanks
   end
 
   def find_user_in_slack(user_name)
-    @slack_client.users_info(user_name)
+    user = @slack_client.users_info(user_name)
     save_user(user) if user
   end
 
