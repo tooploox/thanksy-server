@@ -38,18 +38,8 @@ class CreateThanks
   end
 
   def find_user(user_name_or_id)
-    find_slack_user_in_db_by_name(user_name_or_id) ||
-      find_slack_user_in_db_by_id(user_name_or_id) ||
-      find_user_in_slack("@#{user_name_or_id}") ||
-      find_user_in_slack(user_name_or_id)
-  end
-
-  def find_slack_user_in_db_by_name(user_name)
-    SlackUser.where(name: user_name).take
-  end
-
-  def find_slack_user_in_db_by_id(id)
-    SlackUser.where(id: id).take
+    find_user_in_slack("@#{user_name_or_id}") ||
+    find_user_in_slack(user_name_or_id)
   end
 
   def find_user_in_slack(user_name)
@@ -68,12 +58,13 @@ class CreateThanks
   end
 
   def save_user(user)
-    SlackUser.create(
-      id: user[:user][:id],
-      name: user[:user][:name],
-      real_name: user[:user][:real_name],
-      avatar_url: user[:user][:profile][:image_72],
-    )
+    SlackUser.where(id: user[:user][:id]).first_or_initialize.tap do |u|
+      u.id = user[:user][:id]
+      u.name = user[:user][:name]
+      u.real_name = user[:user][:real_name]
+      u.avatar_url = user[:user][:profile][:image_72]
+      u.save
+    end
   end
 
   def create_thanks(creator, users, text)
