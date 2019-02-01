@@ -8,7 +8,8 @@ class ThanksController < ApplicationController
   end
 
   def stats
-    render json: FetchStatistics.new.(params)
+    FetchStatistics.perform_async(params)
+    render json: { text: "Processing stats!" }
   end
 
   def create

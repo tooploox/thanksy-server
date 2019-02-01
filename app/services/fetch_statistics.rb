@@ -1,12 +1,31 @@
 # frozen_string_literal: true
 
 class FetchStatistics
-  def call(_params)
+  include SuckerPunch::Job
+
+  def initialize(slack_client = ::Adapters::Slack.new)
+    @slack_client = slack_client
+  end
+
+  def perform(params)
     thanks_sent_top_user = fetch_slack_user("thanks_sent")
     thanks_recived_top_user = fetch_slack_user("thanks_recived")
     most_reacted_thanks = fetch_thanks("popularity")
-    {
-      "response_type": "in_channel",
+     send_thanksy_to_slack(params, thanks_sent_top_user, thanks_recived_top_user, most_reacted_thanks)
+  end
+
+  private
+
+  def fetch_slack_user(order_by)
+    SlackUser.order("#{order_by} DESC").first
+  end
+
+  def fetch_thanks(order_by)
+    Thanks.order("#{order_by} DESC").first
+  end
+
+  def send_thanksy_to_slack(params, thanks_sent_top_user, thanks_recived_top_user, most_reacted_thanks)
+    response = {
       "text": "Stats!",
       "attachments": [
         {
@@ -23,15 +42,6 @@ class FetchStatistics
         },
       ],
     }
-  end
-
-  private
-
-  def fetch_slack_user(order_by)
-    SlackUser.order("#{order_by} DESC").first
-  end
-
-  def fetch_thanks(order_by)
-    Thanks.order("#{order_by} DESC").first
+    @slack_client.send_thanks_to_channel(params[:response_url], response)
   end
 end
