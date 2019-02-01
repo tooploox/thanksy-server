@@ -82,7 +82,7 @@ class CreateThanks
     Thanks.create(
       giver: creator.as_json.except("thanks_sent", "thanks_recived"),
       receivers: users.as_json.map { |r| r.except("thanks_sent", "thanks_recived") },
-      text: parsed_text,
+      text: parsed_text.first,
     )
   end
 
