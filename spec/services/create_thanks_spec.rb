@@ -47,7 +47,7 @@ slack_users = {
 slack_groups = {
   usergroups: [
     {
-      name: "Test",
+      handle: "Test",
       users: %w[
         AFN6FJUR4
         AFN6FJUR5

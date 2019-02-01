@@ -61,7 +61,7 @@ class CreateThanks
     groups = @slack_client.usergroups_list
     if groups
       group = groups[:usergroups].find do |usergroup|
-        usergroup[:name] == name
+        usergroup[:handle] == name
       end
     end
     group[:users].map { |id| find_user(id) } if group
