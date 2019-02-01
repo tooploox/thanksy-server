@@ -80,6 +80,8 @@ class CreateThanks
     parsed_text = text.scan(/<!subteam^.+|(@.+)>/).flatten.first
     if parsed_text.blank?
       parsed_text = text
+    else
+      parsed_text = text.gsub(/<.+>/m, parsed_text)
     end
 
     Thanks.create(
