@@ -7,11 +7,13 @@ class ThanksController < ApplicationController
     render json: Thanks.order(created_at: :desc).all
   end
 
+  def stats
+    render json: FetchStatistics.new.(params)
+  end
+
   def create
     CreateThanks.perform_async(params)
-    render json: "Thanks created!"
-  rescue CreateThanks::UserDoesNotExist => e
-    render json: e.message
+    render json: { text: "Processing thanks!" }
   end
 
   def update
