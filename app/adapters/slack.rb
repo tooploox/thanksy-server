@@ -2,15 +2,26 @@
 
 module Adapters
   class Slack
+    MAX_RETRIES = 5
+
     def initialize(slack_client = ::Slack::Web::Client.new, conn = Faraday.new)
       @slack_client = slack_client
       @conn = conn
     end
 
-    def users_info(user_name)
-      @slack_client.users_info(user: user_name)
-    rescue ::Slack::Web::Api::Errors::SlackError
-      nil
+    def users_info(user_name_or_id)
+      retry_count = 0
+
+      begin
+        @slack_client.users_info(user: user_name_or_id)
+      rescue ::Slack::Web::Api::Errors::TooManyRequestsError => e
+        sleep(e.retry_after)
+        retry_count += 1
+        retry if retry_count < MAX_RETRIES
+        nil
+      rescue ::Slack::Web::Api::Errors::SlackError => e
+        nil
+      end
     end
 
     def usergroups_list
