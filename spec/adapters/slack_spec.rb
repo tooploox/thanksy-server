@@ -7,6 +7,8 @@ describe Adapters::Slack do
   let(:adapter) { Adapters::Slack.new(slack_client) }
   let(:user_name) { "user_name" }
 
+  before { allow_any_instance_of(Adapters::Slack).to receive(:sleep) }
+
   it "#users_info should successfully return user if exist" do
     expected_user = {
       id: "test-id",
