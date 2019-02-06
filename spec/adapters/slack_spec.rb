@@ -22,7 +22,7 @@ describe Adapters::Slack do
   it "#users_info should retry call if slack API raise TooManyRequestsError" do
     api_response = double("response")
     headers = {
-      "retry-after" => 1
+      "retry-after" => 1,
     }
     expect(api_response)
       .to receive(:headers)

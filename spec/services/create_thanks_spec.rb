@@ -64,10 +64,10 @@ describe CreateThanks do
   let(:command_3_text) { "Thanks @Test for food" }
   let(:command_4_text) { "Thanks @fake for food" }
   let(:command_5_text) do
-    "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo" +
-    "ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis" +
-    "parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec," +
-    "pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec.!!!!!"
+    "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo" \
+      "ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis" \
+      "parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec," \
+      "pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec.!!!!!"
   end
   let(:command_6_text) { "Thanks <!subteam^SEQ8LFHR7|@Test> for food" }
   let(:thanks_request_1) { thanks_request_params("tomek.ryba", command_1_text) }

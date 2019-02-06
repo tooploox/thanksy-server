@@ -11,7 +11,7 @@ class FetchStatistics
     thanks_sent_top_user = fetch_slack_user("thanks_sent")
     thanks_recived_top_user = fetch_slack_user("thanks_recived")
     most_reacted_thanks = fetch_thanks("popularity")
-     send_thanksy_to_slack(params, thanks_sent_top_user, thanks_recived_top_user, most_reacted_thanks)
+    send_thanksy_to_slack(params, thanks_sent_top_user, thanks_recived_top_user, most_reacted_thanks)
   end
 
   private
