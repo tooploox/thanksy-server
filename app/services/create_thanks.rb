@@ -2,6 +2,7 @@
 
 class CreateThanks
   class UserNotFound < StandardError; end
+  class TextTooLong < StandardError; end
 
   include SuckerPunch::Job
 
@@ -10,7 +11,9 @@ class CreateThanks
   end
 
   def perform(params)
-    thank_recivers = extract_recivers(params)
+    thanksy_text = params[:text].gsub(/<!subteam.+\||>/, "")
+    validate_thanksy_text(thanksy_text)
+    thank_recivers = extract_recivers(thanksy_text)
     creators_user_name = params[:user_name]
     creator = find_user(creators_user_name)
     recivers = thank_recivers.map do |user_name|
@@ -18,16 +21,20 @@ class CreateThanks
     end.flatten
     creator.increment!(:thanks_sent)
     recivers.each { |r| r.increment!(:thanks_recived) }
-    thanks = create_thanks(creator, recivers, params[:text])
+    thanks = create_thanks(creator, recivers, thanksy_text)
     send_thanksy_to_slack(params, creators_user_name, thanks)
-  rescue UserNotFound => e
+  rescue UserNotFound, TextTooLong => e
     notify_slack_about_error(params, e.message)
   end
 
   private
 
-  def extract_recivers(params)
-    params[:text].scan(/@([\w.]+)/).flatten
+  def validate_thanksy_text(thanksy_text)
+    raise TextTooLong, "Given text is longer than 300 characters" if thanksy_text.length > 300
+  end
+
+  def extract_recivers(thanksy_text)
+    thanksy_text.scan(/@([\w.]+)/).flatten
   end
 
   def find_user_or_group_of_users(name)
@@ -77,17 +84,10 @@ class CreateThanks
   end
 
   def create_thanks(creator, users, text)
-    parsed_text = text.scan(/<!subteam^.+|(@.+)>/).flatten.first
-    if parsed_text.blank?
-      parsed_text = text
-    else
-      parsed_text = text.gsub(/<.+>/m, parsed_text)
-    end
-
     Thanks.create(
       giver: creator.as_json.except("thanks_sent", "thanks_recived"),
       receivers: users.as_json.map { |r| r.except("thanks_sent", "thanks_recived") },
-      text: parsed_text,
+      text: text,
     )
   end
 

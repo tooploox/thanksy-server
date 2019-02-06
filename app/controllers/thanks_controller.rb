@@ -14,7 +14,7 @@ class ThanksController < ApplicationController
 
   def create
     CreateThanks.perform_async(params)
-    render json: { text: "Processing thanks!" }
+    render json: { text: "Processing thanks! It may take some time for large groups." }
   end
 
   def update

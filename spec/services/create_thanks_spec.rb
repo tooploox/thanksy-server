@@ -63,10 +63,19 @@ describe CreateThanks do
   let(:command_2_text) { "Thanks for food" }
   let(:command_3_text) { "Thanks @Test for food" }
   let(:command_4_text) { "Thanks @fake for food" }
+  let(:command_5_text) do
+    "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo" +
+    "ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis" +
+    "parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec," +
+    "pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec.!!!!!"
+  end
+  let(:command_6_text) { "Thanks <!subteam^SEQ8LFHR7|@Test> for food" }
   let(:thanks_request_1) { thanks_request_params("tomek.ryba", command_1_text) }
   let(:thanks_request_2) { thanks_request_params("tomek.ryba", command_2_text) }
   let(:thanks_request_3) { thanks_request_params("tomek.ryba", command_3_text) }
   let(:thanks_request_4) { thanks_request_params("tomek.ryba", command_4_text) }
+  let(:thanks_request_5) { thanks_request_params("tomek.ryba", command_5_text) }
+  let(:thanks_request_6) { thanks_request_params("tomek.ryba", command_6_text) }
 
   before do
     @time = Time.zone.now
@@ -190,7 +199,7 @@ describe CreateThanks do
     expect(thanks[0].text).to eq command_3_text
   end
 
-  it "should should fail if receiver doesn't exist" do
+  it "should fail if receiver doesn't exist" do
     service.perform(thanks_request_4)
     response_url = thanks_request_4[:response_url]
     thanks = Thanks.order(created_at: :desc).all
@@ -198,6 +207,24 @@ describe CreateThanks do
 
     expect(fake_slack.responses[response_url]).to eq expected_response
     expect(thanks.length).to eq 0
+  end
+
+  it "should fail if thanksy text is longer than 300 characters" do
+    service.perform(thanks_request_5)
+    response_url = thanks_request_5[:response_url]
+    thanks = Thanks.order(created_at: :desc).all
+    expected_response = { text: "Given text is longer than 300 characters" }
+
+    expect(fake_slack.responses[response_url]).to eq expected_response
+    expect(thanks.length).to eq 0
+  end
+
+  it "should remove group variables" do
+    service.perform(thanks_request_6)
+    thanks = Thanks.order(created_at: :desc).all
+
+    expect(thanks.length).to eq 1
+    expect(thanks[0].text).to eq "Thanks @Test for food"
   end
 end
 
