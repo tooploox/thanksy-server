@@ -59,23 +59,15 @@ slack_groups = {
 describe CreateThanks do
   let(:fake_slack) { Adapters::FakeSlack.new(slack_users, slack_groups) }
   let(:service) { CreateThanks.new(fake_slack) }
+  let(:creator) { "tomek.ryba" }
   let(:command_1_text) { "Thanks @joe.doe for food" }
   let(:command_2_text) { "Thanks for food" }
   let(:command_3_text) { "Thanks @Test for food" }
   let(:command_4_text) { "Thanks @fake for food" }
-  let(:command_5_text) do
-    "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo" \
-      "ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis" \
-      "parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec," \
-      "pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec.!!!!!"
-  end
-  let(:command_6_text) { "Thanks <!subteam^SEQ8LFHR7|@Test> for food" }
   let(:thanks_request_1) { thanks_request_params("tomek.ryba", command_1_text) }
   let(:thanks_request_2) { thanks_request_params("tomek.ryba", command_2_text) }
   let(:thanks_request_3) { thanks_request_params("tomek.ryba", command_3_text) }
   let(:thanks_request_4) { thanks_request_params("tomek.ryba", command_4_text) }
-  let(:thanks_request_5) { thanks_request_params("tomek.ryba", command_5_text) }
-  let(:thanks_request_6) { thanks_request_params("tomek.ryba", command_6_text) }
 
   before do
     @time = Time.zone.now
@@ -83,7 +75,7 @@ describe CreateThanks do
   end
 
   it "should create thanks" do
-    service.perform(thanks_request_1)
+    service.perform(build_thanksy_request(thanks_request_1))
     thanks = Thanks.order(created_at: :desc).all
 
     expect(thanks.length).to eq 1
@@ -99,33 +91,33 @@ describe CreateThanks do
   end
 
   it "should save users locally once" do
-    service.perform(thanks_request_1)
+    service.perform(build_thanksy_request(thanks_request_1))
     users = SlackUser.order(created_at: :desc).all
-    user_0 = expected_user(slack_users["@tomek.ryba"][:user])
-    user_1 = expected_user(slack_users["@joe.doe"][:user])
+    user0 = expected_user(slack_users["@tomek.ryba"][:user])
+    user1 = expected_user(slack_users["@joe.doe"][:user])
 
     expect(users.length).to eq 2
-    expect(users[0].id).to eq user_0["id"]
-    expect(users[0].name).to eq user_0["name"]
-    expect(users[0].real_name).to eq user_0["real_name"]
-    expect(users[0].avatar_url).to eq user_0["avatar_url"]
+    expect(users[0].id).to eq user0["id"]
+    expect(users[0].name).to eq user0["name"]
+    expect(users[0].real_name).to eq user0["real_name"]
+    expect(users[0].avatar_url).to eq user0["avatar_url"]
     expect(users[0].thanks_sent).to eq 1
     expect(users[0].thanks_recived).to eq 0
 
-    expect(users[1].id).to eq user_1["id"]
-    expect(users[1].name).to eq user_1["name"]
-    expect(users[1].real_name).to eq user_1["real_name"]
-    expect(users[1].avatar_url).to eq user_1["avatar_url"]
+    expect(users[1].id).to eq user1["id"]
+    expect(users[1].name).to eq user1["name"]
+    expect(users[1].real_name).to eq user1["real_name"]
+    expect(users[1].avatar_url).to eq user1["avatar_url"]
     expect(users[1].thanks_sent).to eq 0
     expect(users[1].thanks_recived).to eq 1
 
-    service.perform(thanks_request_1)
+    service.perform(build_thanksy_request(thanks_request_1))
     users = SlackUser.order(created_at: :desc).all
     expect(users.length).to eq 2
   end
 
   it "should send thanksy on slack channel" do
-    service.perform(thanks_request_1)
+    service.perform(build_thanksy_request(thanks_request_1))
     response_url = thanks_request_1[:response_url]
     thanks = Thanks.order(created_at: :desc).last
     expected_response = SlackResponse.new.in_channel("tomek.ryba", thanks)
@@ -134,7 +126,7 @@ describe CreateThanks do
   end
 
   it "should create thanks if receiver is not set" do
-    service.perform(thanks_request_2)
+    service.perform(build_thanksy_request(thanks_request_2))
     thanks = Thanks.order(created_at: :desc).all
 
     expect(thanks.length).to eq 1
@@ -150,7 +142,7 @@ describe CreateThanks do
   end
 
   it "should create thanks if receiver is not set" do
-    service.perform(thanks_request_2)
+    service.perform(build_thanksy_request(thanks_request_2))
     thanks = Thanks.order(created_at: :desc).all
 
     expect(thanks.length).to eq 1
@@ -166,7 +158,7 @@ describe CreateThanks do
   end
 
   it "should create thanks for group of users" do
-    service.perform(thanks_request_3)
+    service.perform(build_thanksy_request(thanks_request_3))
     thanks = Thanks.order(created_at: :desc).all
 
     expect(thanks.length).to eq 1
@@ -183,7 +175,7 @@ describe CreateThanks do
   end
 
   it "should create thanks for group of users" do
-    service.perform(thanks_request_3)
+    service.perform(build_thanksy_request(thanks_request_3))
     thanks = Thanks.order(created_at: :desc).all
 
     expect(thanks.length).to eq 1
@@ -200,7 +192,7 @@ describe CreateThanks do
   end
 
   it "should fail if receiver doesn't exist" do
-    service.perform(thanks_request_4)
+    service.perform(build_thanksy_request(thanks_request_4))
     response_url = thanks_request_4[:response_url]
     thanks = Thanks.order(created_at: :desc).all
     expected_response = { text: "User or group fake doesn't exist" }
@@ -208,27 +200,13 @@ describe CreateThanks do
     expect(fake_slack.responses[response_url]).to eq expected_response
     expect(thanks.length).to eq 0
   end
-
-  it "should fail if thanksy text is longer than 300 characters" do
-    service.perform(thanks_request_5)
-    response_url = thanks_request_5[:response_url]
-    thanks = Thanks.order(created_at: :desc).all
-    expected_response = { text: "Given text is longer than 300 characters" }
-
-    expect(fake_slack.responses[response_url]).to eq expected_response
-    expect(thanks.length).to eq 0
-  end
-
-  it "should remove group variables" do
-    service.perform(thanks_request_6)
-    thanks = Thanks.order(created_at: :desc).all
-
-    expect(thanks.length).to eq 1
-    expect(thanks[0].text).to eq "Thanks @Test for food"
-  end
 end
 
 private
+
+def build_thanksy_request(request_params)
+  ThanksyRequest.new(request_params)
+end
 
 def expected_user(user_data)
   {

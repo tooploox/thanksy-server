@@ -13,8 +13,13 @@ class ThanksController < ApplicationController
   end
 
   def create
-    CreateThanks.perform_async(params)
-    render json: { text: "Processing thanks! It may take some time for large groups." }
+    thanksy_request = ThanksyRequest.new(params.permit(:text, :user_name, :response_url))
+    if thanksy_request.valid?
+      CreateThanks.perform_async(thanksy_request)
+      render json: { text: "Processing thanks! It may take some time for large groups." }
+    else
+      render json: { text: thanksy_request.errors.full_messages.join(" ") }
+    end
   end
 
   def update

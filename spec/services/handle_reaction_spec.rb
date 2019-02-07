@@ -44,7 +44,7 @@ describe HandleReaction do
   end
 
   it "should create thanks" do
-    create_thanks_service.perform(thanks_request)
+    create_thanks_service.perform(build_thanksy_request(thanks_request))
     thanks = Thanks.order(created_at: :desc).last
 
     %w[love clap confetti wow].each do |reaction|
@@ -62,7 +62,7 @@ describe HandleReaction do
   end
 
   it "should create thanks" do
-    create_thanks_service.perform(thanks_request)
+    create_thanks_service.perform(build_thanksy_request(thanks_request))
     thanks = Thanks.order(created_at: :desc).last
     thanks_reaction = thanks_reaction_params("love", thanks.id)
     result = service.(thanks_reaction)
@@ -75,5 +75,11 @@ describe HandleReaction do
     }
 
     expect(result).to eq expected_result
+  end
+
+  private
+
+  def build_thanksy_request(request_params)
+    ThanksyRequest.new(request_params)
   end
 end
