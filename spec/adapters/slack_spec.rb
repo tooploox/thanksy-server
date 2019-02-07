@@ -62,9 +62,6 @@ describe Adapters::Slack do
   end
 
   it "#usergroups_list should return nil if if slack API raise Slack::Web::Api::Errors::SlackError" do
-    expected_group = [{
-      id: "test-id",
-    }]
     expect(slack_client)
       .to receive(:usergroups_list)
       .with(include_users: true)
