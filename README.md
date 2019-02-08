@@ -4,9 +4,15 @@
 
 ## Deployment
 
-You can easily deploy our API application on heroku using the `Deploy to Heroku` button.
+    heroku create
+    git push heroku master
+    heroku run rake db:migrate
+    heroku open
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+
+Alternatively, you can deploy your own copy of the app using the web-based flow:
+
+[![Deploy to Heroku](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
 
 ## Development
 
@@ -37,8 +43,8 @@ Then fill missing options in the `.env` file.
 
 ### Run the server
 
-    ./scripts/server.sh
+    rails s
 
 ### Run tests
 
-    ./scripts/tests.sh
+    rspec
