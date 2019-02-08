@@ -39,4 +39,10 @@ module ParamsFactory
       }.to_json,
     }
   end
+
+  def fetch_statistics_params
+    {
+      response_url: "https://hooks.slack.com/commands/TFM9DNNQ1/536955343442/BqkZE6Qvh2wwUs4dCBi5G0vc",
+    }
+  end
 end

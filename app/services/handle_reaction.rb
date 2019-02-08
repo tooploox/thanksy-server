@@ -26,19 +26,22 @@ class HandleReaction
   def apply_action(action_name, thanks)
     case action_name
     when "love"
-      thanks.increment!(:love_count)
-      thanks.increment!(:popularity)
+      increment_reaction(thanks, :love_count)
     when "clap"
-      thanks.increment!(:clap_count)
-      thanks.increment!(:popularity)
+      increment_reaction(thanks, :clap_count)
     when "confetti"
-      thanks.increment!(:confetti_count)
-      thanks.increment!(:popularity)
+      increment_reaction(thanks, :confetti_count)
     when "wow"
-      thanks.increment!(:wow_count)
-      thanks.increment!(:popularity)
+      increment_reaction(thanks, :wow_count)
     else
       "I have no idea what to do with that."
+    end
+  end
+
+  def increment_reaction(thanks, reaction_name)
+    ActiveRecord::Base.transaction do
+      thanks.increment!(reaction_name)
+      thanks.increment!(:popularity)
     end
   end
 end
