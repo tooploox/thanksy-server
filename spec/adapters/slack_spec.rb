@@ -39,7 +39,7 @@ describe Adapters::Slack do
     expect(adapter.users_info(user_name)).to eq nil
   end
 
-  it "#users_info should return nil if if slack API raise Slack::Web::Api::Errors::SlackError" do
+  it "#users_info should return nil if slack API raise Slack::Web::Api::Errors::SlackError" do
     expect(slack_client)
       .to receive(:users_info)
       .with(user: user_name)
@@ -61,7 +61,7 @@ describe Adapters::Slack do
     expect(adapter.usergroups_list).to eq expected_group
   end
 
-  it "#usergroups_list should return nil if if slack API raise Slack::Web::Api::Errors::SlackError" do
+  it "#usergroups_list should return nil if slack API raise Slack::Web::Api::Errors::SlackError" do
     expect(slack_client)
       .to receive(:usergroups_list)
       .with(include_users: true)

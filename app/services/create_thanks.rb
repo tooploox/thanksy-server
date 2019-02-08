@@ -15,9 +15,7 @@ class CreateThanks
     recivers = thank_recivers.map do |user_name|
       find_user_or_group_of_users(user_name)
     end.flatten
-    creator.increment!(:thanks_sent)
-    recivers.each { |r| r.increment!(:thanks_recived) }
-    thanks = create_thanks(creator, recivers, thanksy_request.thanksy_text)
+    thanks = save_aggregate(creator, recivers, thanksy_request)
     send_thanksy_to_slack(thanksy_request.response_url, thanksy_request.user_name, thanks)
   rescue UserNotFound => e
     notify_slack_about_error(thanksy_request.response_url, e.message)
@@ -52,27 +50,31 @@ class CreateThanks
   end
 
   def find_user_in_slack(user_name)
-    user = @slack_client.users_info(user_name)
-    save_user(user) if user
+    user_data = @slack_client.users_info(user_name)
+    new_user(user_data) if user_data
   end
 
   def find_group_in_slack(name)
-    groups = @slack_client.usergroups_list
-    if groups
-      group = groups[:usergroups].find do |usergroup|
-        usergroup[:handle] == name
-      end
-    end
-    group[:users].map { |id| find_user(id) } if group
+    usergroups = @slack_client.usergroups_list&.dig(:usergroups)
+    group = usergroups.find { |usergroup| usergroup[:handle] == name } if usergroups
+    group&.dig(:users)&.map { |id| find_user(id) }
   end
 
-  def save_user(user)
-    SlackUser.create(
+  def new_user(user)
+    SlackUser.new(
       id: user[:user][:id],
       name: user[:user][:name],
       real_name: user[:user][:real_name],
       avatar_url: user[:user][:profile][:image_72],
     )
+  end
+
+  def save_aggregate(creator, recivers, thanksy_request)
+    ActiveRecord::Base.transaction do
+      creator.increment(:thanks_sent).save!
+      recivers.each { |r| r.increment(:thanks_recived).save! }
+      create_thanks(creator, recivers, thanksy_request.thanksy_text)
+    end
   end
 
   def create_thanks(creator, users, text)

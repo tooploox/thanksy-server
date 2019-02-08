@@ -141,22 +141,6 @@ describe CreateThanks do
     expect(thanks[0].text).to eq command_2_text
   end
 
-  it "should create thanks if receiver is not set" do
-    service.perform(build_thanksy_request(thanks_request_2))
-    thanks = Thanks.order(created_at: :desc).all
-
-    expect(thanks.length).to eq 1
-    expect(thanks[0].receivers.length).to eq 0
-    expect(thanks[0].giver).to eq expected_user(slack_users["@tomek.ryba"][:user])
-    expect(thanks[0].receivers).to eq []
-    expect(thanks[0].love_count).to eq 0
-    expect(thanks[0].confetti_count).to eq 0
-    expect(thanks[0].clap_count).to eq 0
-    expect(thanks[0].wow_count).to eq 0
-    expect(thanks[0].popularity).to eq 0
-    expect(thanks[0].text).to eq command_2_text
-  end
-
   it "should create thanks for group of users" do
     service.perform(build_thanksy_request(thanks_request_3))
     thanks = Thanks.order(created_at: :desc).all
