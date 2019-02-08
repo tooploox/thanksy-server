@@ -1,9 +1,0 @@
-{
-  "name": "Thanksy",
-  "description": "Server application written in Ruby to manage thanksy environment",
-  "repository": "https://github.com/tooploox/thanksy-server",
-  "keywords": ["ruby", "rails", "thanksy"],
-  "buildpacks": [
-    { "url": "heroku/ruby" }
-  ]
-}
