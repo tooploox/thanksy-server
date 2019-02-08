@@ -5,7 +5,7 @@ class ThanksController < ApplicationController
   before_action :verify_slack_token, except: :index
 
   def index
-    render json: Thanks.order(created_at: :desc).all
+    render json: Thanks.order(created_at: :desc).first(10)
   end
 
   def stats
