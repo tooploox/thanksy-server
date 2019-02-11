@@ -74,7 +74,7 @@ describe CreateThanks do
     Timecop.freeze(@time)
   end
 
-  it "should create thanks" do
+  it "creates thanks" do
     service.perform(build_thanksy_request(thanks_request_1))
     thanks = Thanks.order(created_at: :desc).all
 
@@ -90,7 +90,7 @@ describe CreateThanks do
     expect(thanks[0].text).to eq command_1_text
   end
 
-  it "should save users locally once" do
+  it "saves users locally once" do
     service.perform(build_thanksy_request(thanks_request_1))
     users = SlackUser.order(created_at: :desc).all
     user0 = expected_user(slack_users["@tomek.ryba"][:user])
@@ -116,7 +116,7 @@ describe CreateThanks do
     expect(users.length).to eq 2
   end
 
-  it "should send thanksy on slack channel" do
+  it "sends thanksy on slack channel" do
     service.perform(build_thanksy_request(thanks_request_1))
     response_url = thanks_request_1[:response_url]
     thanks = Thanks.order(created_at: :desc).last
@@ -125,7 +125,7 @@ describe CreateThanks do
     expect(fake_slack.responses[response_url]).to eq expected_response
   end
 
-  it "should create thanks if receiver is not set" do
+  it "creates thanks if receiver is not set" do
     service.perform(build_thanksy_request(thanks_request_2))
     thanks = Thanks.order(created_at: :desc).all
 
@@ -141,7 +141,7 @@ describe CreateThanks do
     expect(thanks[0].text).to eq command_2_text
   end
 
-  it "should create thanks for group of users" do
+  it "creates thanks for group of users" do
     service.perform(build_thanksy_request(thanks_request_3))
     thanks = Thanks.order(created_at: :desc).all
 
@@ -158,7 +158,7 @@ describe CreateThanks do
     expect(thanks[0].text).to eq command_3_text
   end
 
-  it "should create thanks for group of users" do
+  it "creates thanks for group of users" do
     service.perform(build_thanksy_request(thanks_request_3))
     thanks = Thanks.order(created_at: :desc).all
 
@@ -175,7 +175,7 @@ describe CreateThanks do
     expect(thanks[0].text).to eq command_3_text
   end
 
-  it "should fail if receiver doesn't exist" do
+  it "fails if receiver doesn't exist" do
     service.perform(build_thanksy_request(thanks_request_4))
     response_url = thanks_request_4[:response_url]
     thanks = Thanks.order(created_at: :desc).all
@@ -183,6 +183,33 @@ describe CreateThanks do
 
     expect(fake_slack.responses[response_url]).to eq expected_response
     expect(thanks.length).to eq 0
+  end
+
+  it "refreshes user data async if a user is cached in db" do
+    service.perform(build_thanksy_request(thanks_request_1))
+    thanks = Thanks.order(created_at: :desc).all
+    expect(thanks.length).to eq 1
+
+    receiver = SlackUser.find(thanks[0].receivers[0]["id"])
+    giver = SlackUser.find(thanks[0].giver["id"])
+
+    receiver.update(name: "changed", real_name: "changed", avatar_url: "changed")
+    giver.update(name: "changed", real_name: "changed", avatar_url: "changed")
+
+    service.perform(build_thanksy_request(thanks_request_1))
+
+    receiver.reload
+    giver.reload
+
+    expect(receiver.id).to eq slack_users["@joe.doe"][:user][:id]
+    expect(receiver.name).to eq slack_users["@joe.doe"][:user][:name]
+    expect(receiver.real_name).to eq slack_users["@joe.doe"][:user][:real_name]
+    expect(receiver.avatar_url).to eq slack_users["@joe.doe"][:user][:profile][:image_72]
+
+    expect(giver.id).to eq slack_users["@tomek.ryba"][:user][:id]
+    expect(giver.name).to eq slack_users["@tomek.ryba"][:user][:name]
+    expect(giver.real_name).to eq slack_users["@tomek.ryba"][:user][:real_name]
+    expect(giver.avatar_url).to eq slack_users["@tomek.ryba"][:user][:profile][:image_72]
   end
 end
 

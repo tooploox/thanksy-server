@@ -12,8 +12,8 @@ class CreateThanks
   def perform(thanksy_request)
     receivers = extract_receivers_from_request(thanksy_request.thanksy_text)
     receivers = find_receivers_in_db_or_on_slack(receivers)
-    thanks_giver = find_user(thanksy_request.user_name)
-    thanks = save_aggregate(thanks_giver, receivers, thanksy_request)
+    giver = find_user(thanksy_request.user_name)
+    thanks = save_aggregate(giver, receivers, thanksy_request)
     send_thanksy_to_slack(thanksy_request.response_url, thanksy_request.user_name, thanks)
   rescue UserNotFound => e
     notify_slack_about_error(thanksy_request.response_url, e.message)
@@ -39,10 +39,17 @@ class CreateThanks
   end
 
   def find_user(user_name_or_id)
-    find_slack_user_in_db_by_name(user_name_or_id) ||
-      find_slack_user_in_db_by_id(user_name_or_id) ||
-      find_user_in_slack("@#{user_name_or_id}") ||
-      find_user_in_slack(user_name_or_id)
+    find_slack_user_in_db(user_name_or_id) || find_user_in_slack(user_name_or_id)
+  end
+
+  def find_slack_user_in_db(user_name_or_id)
+    user = find_slack_user_in_db_by_name(user_name_or_id) || find_slack_user_in_db_by_id(user_name_or_id)
+    refresh_slack_user_async(user) if user
+    user
+  end
+
+  def find_user_in_slack(user_name_or_id)
+    fetch_slack_user_data("@#{user_name_or_id}") || fetch_slack_user_data(user_name_or_id)
   end
 
   def find_slack_user_in_db_by_name(user_name)
@@ -53,7 +60,7 @@ class CreateThanks
     SlackUser.find_by(id: id)
   end
 
-  def find_user_in_slack(user_name)
+  def fetch_slack_user_data(user_name)
     user_data = @slack_client.users_info(user_name)
     new_user(user_data) if user_data
   end
@@ -96,5 +103,9 @@ class CreateThanks
 
   def notify_slack_about_error(response_url, message)
     @slack_client.send_thanks_to_channel(response_url, text: message)
+  end
+
+  def refresh_slack_user_async(user)
+    RefreshSlackUser.perform_async(@slack_client, user)
   end
 end

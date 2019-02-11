@@ -13,6 +13,7 @@ gem "rack-cors"
 gem "rails", "~> 5.2.2"
 gem "slack-ruby-client"
 gem "sucker_punch"
+gem "concurrent-ruby"
 
 group :development, :test do
   gem "dotenv-rails"
