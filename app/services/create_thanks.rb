@@ -49,7 +49,7 @@ class CreateThanks
   end
 
   def find_user_in_slack(user_name_or_id)
-    fetch_slack_user_data("@#{user_name_or_id}") || fetch_slack_user_data(user_name_or_id)
+    fetch_slack_user_data(user_name_or_id) || fetch_slack_user_data("@#{user_name_or_id}")
   end
 
   def find_slack_user_in_db_by_name(user_name)
