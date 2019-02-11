@@ -20,7 +20,7 @@ class HandleReaction
   end
 
   def find_thanks(thanks_id)
-    Thanks.where(id: thanks_id).take
+    Thanks.find_by(id: thanks_id)
   end
 
   def apply_action(action_name, thanks)

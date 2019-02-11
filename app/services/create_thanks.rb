@@ -10,12 +10,10 @@ class CreateThanks
   end
 
   def perform(thanksy_request)
-    thank_recivers = extract_recivers(thanksy_request.thanksy_text)
-    creator = find_user(thanksy_request.user_name)
-    recivers = thank_recivers.map do |user_name|
-      find_user_or_group_of_users(user_name)
-    end.flatten
-    thanks = save_aggregate(creator, recivers, thanksy_request)
+    receivers = extract_receivers_from_request(thanksy_request.thanksy_text)
+    receivers = find_receivers_in_db_or_on_slack(receivers)
+    thanks_giver = find_user(thanksy_request.user_name)
+    thanks = save_aggregate(thanks_giver, receivers, thanksy_request)
     send_thanksy_to_slack(thanksy_request.response_url, thanksy_request.user_name, thanks)
   rescue UserNotFound => e
     notify_slack_about_error(thanksy_request.response_url, e.message)
@@ -23,7 +21,13 @@ class CreateThanks
 
   private
 
-  def extract_recivers(thanksy_text)
+  def find_receivers_in_db_or_on_slack(receivers)
+    receivers.map do |user_name|
+      find_user_or_group_of_users(user_name)
+    end.flatten
+  end
+
+  def extract_receivers_from_request(thanksy_text)
     thanksy_text.scan(/@([\w.]+)/).flatten
   end
 
@@ -42,11 +46,11 @@ class CreateThanks
   end
 
   def find_slack_user_in_db_by_name(user_name)
-    SlackUser.where(name: user_name).take
+    SlackUser.find_by(name: user_name)
   end
 
   def find_slack_user_in_db_by_id(id)
-    SlackUser.where(id: id).take
+    SlackUser.find_by(id: id)
   end
 
   def find_user_in_slack(user_name)
@@ -69,24 +73,24 @@ class CreateThanks
     )
   end
 
-  def save_aggregate(creator, recivers, thanksy_request)
+  def save_aggregate(thanks_giver, receivers, thanksy_request)
     ActiveRecord::Base.transaction do
-      creator.increment(:thanks_sent).save!
-      recivers.each { |r| r.increment(:thanks_recived).save! }
-      create_thanks(creator, recivers, thanksy_request.thanksy_text)
+      thanks_giver.increment(:thanks_sent).save!
+      receivers.each { |r| r.increment(:thanks_recived).save! }
+      create_thanks(thanks_giver, receivers, thanksy_request.thanksy_text)
     end
   end
 
-  def create_thanks(creator, users, text)
+  def create_thanks(thanks_giver, users, text)
     Thanks.create(
-      giver: creator.as_json.except("thanks_sent", "thanks_recived"),
+      giver: thanks_giver.as_json.except("thanks_sent", "thanks_recived"),
       receivers: users.as_json.map { |r| r.except("thanks_sent", "thanks_recived") },
       text: text,
     )
   end
 
-  def send_thanksy_to_slack(response_url, creators_user_name, thanks)
-    response = SlackResponse.new.in_channel(creators_user_name, thanks)
+  def send_thanksy_to_slack(response_url, thanks_givers_user_name, thanks)
+    response = SlackResponse.new.in_channel(thanks_givers_user_name, thanks)
     @slack_client.send_thanks_to_channel(response_url, response)
   end
 
