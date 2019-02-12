@@ -18,7 +18,8 @@ class SlackResponse
     }
   end
 
-  def stats(top_senders, top_recivers, most_reacted_thanks)
+  # rubocop:disable Metrics/AbcSize
+  def stats(top_senders, top_receivers, most_reacted_thanks)
     {
       "text": "*Top 3 givers:* \n " \
       ":one: <@#{top_senders[0].name}>  | " \
@@ -27,13 +28,13 @@ class SlackResponse
       "Thanks sent: #{top_senders[1].thanks_sent} \n " \
       ":three: <@#{top_senders[2].name}>  | " \
       "Thanks sent: #{top_senders[2].thanks_sent} \n ---------------------------- \n " \
-      "*Top 3 recivers:* \n " \
-      ":one: <@#{top_recivers[0].name}>  |  " \
-      "Thanks recived: #{top_recivers[0].thanks_recived} \n " \
-      ":two: <@#{top_recivers[1].name}>  | " \
-      "Thanks recived: #{top_recivers[1].thanks_recived} \n " \
-      ":three: <@#{top_recivers[2].name}>  | " \
-      "Thanks recived: #{top_recivers[2].thanks_recived} \n ---------------------------- \n " \
+      "*Top 3 receivers:* \n " \
+      ":one: <@#{top_receivers[0].name}>  |  " \
+      "Thanks received: #{top_receivers[0].thanks_received} \n " \
+      ":two: <@#{top_receivers[1].name}>  | " \
+      "Thanks received: #{top_receivers[1].thanks_received} \n " \
+      ":three: <@#{top_receivers[2].name}>  | " \
+      "Thanks received: #{top_receivers[2].thanks_received} \n ---------------------------- \n " \
       "*Top 3 Thanks with the most reactions:* \n " \
       ":one: <@#{most_reacted_thanks[0].giver['name']}>  | " \
       "Reactions: #{most_reacted_thanks[0].popularity} \n `#{most_reacted_thanks[0].text}` \n\n " \
@@ -43,6 +44,7 @@ class SlackResponse
       "Reactions: #{most_reacted_thanks[2].popularity} \n `#{most_reacted_thanks[2].text}` \n\n",
     }
   end
+  # rubocop:enable Metrics/AbcSize
 
   def actions(thanks)
     [

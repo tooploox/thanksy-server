@@ -102,14 +102,14 @@ describe CreateThanks do
     expect(users[0].real_name).to eq user0["real_name"]
     expect(users[0].avatar_url).to eq user0["avatar_url"]
     expect(users[0].thanks_sent).to eq 1
-    expect(users[0].thanks_recived).to eq 0
+    expect(users[0].thanks_received).to eq 0
 
     expect(users[1].id).to eq user1["id"]
     expect(users[1].name).to eq user1["name"]
     expect(users[1].real_name).to eq user1["real_name"]
     expect(users[1].avatar_url).to eq user1["avatar_url"]
     expect(users[1].thanks_sent).to eq 0
-    expect(users[1].thanks_recived).to eq 1
+    expect(users[1].thanks_received).to eq 1
 
     service.perform(build_thanksy_request(thanks_request_1))
     users = SlackUser.order(created_at: :desc).all
@@ -193,8 +193,8 @@ describe CreateThanks do
     receiver = SlackUser.find(thanks[0].receivers[0]["id"])
     giver = SlackUser.find(thanks[0].giver["id"])
 
-    receiver.update(name: "changed", real_name: "changed", avatar_url: "changed")
-    giver.update(name: "changed", real_name: "changed", avatar_url: "changed")
+    receiver.update(real_name: "changed", avatar_url: "changed")
+    giver.update(real_name: "changed", avatar_url: "changed")
 
     service.perform(build_thanksy_request(thanks_request_1))
 

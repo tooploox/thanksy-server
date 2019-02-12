@@ -73,10 +73,10 @@ describe FetchStatistics do
     end
 
     thanks_sent_top_user = SlackUser.order("thanks_sent DESC").limit(3)
-    thanks_recived_top_user = SlackUser.order("thanks_recived DESC").limit(3)
+    thanks_received_top_user = SlackUser.order("thanks_received DESC").limit(3)
     most_reacted_thanks = Thanks.order("popularity DESC").limit(3)
 
-    expected_stats = SlackResponse.new.stats(thanks_sent_top_user, thanks_recived_top_user, most_reacted_thanks)
+    expected_stats = SlackResponse.new.stats(thanks_sent_top_user, thanks_received_top_user, most_reacted_thanks)
     request_params = fetch_statistics_params
     service.perform(request_params)
 
