@@ -3,45 +3,53 @@
 class FindSlackUsers
   class SlackUserNotFound < StandardError; end
 
+  class SearchResult
+    attr_reader :cached_users, :unknown_users
+
+    def initialize
+      @cached_users = []
+      @unknown_users = []
+    end
+
+    def add_cached_user(slack_user)
+      @cached_users << slack_user
+    end
+
+    def add_unknown_user(slack_user)
+      @unknown_users << slack_user
+    end
+
+    def merge!(finding_result)
+      @cached_users += finding_result.cached_users
+      @unknown_users += finding_result.unknown_users
+    end
+  end
+
   def initialize(slack_client)
     @slack_client = slack_client
   end
 
   def call(user_names_or_ids)
-    find_cached_slack_users(user_names_or_ids).then do |result|
-      result[:cached].each { |cached_slack_user| refresh_slack_user_async(cached_slack_user) }
-      result[:cached] + fetch_slack_users_from_slack(result[:to_fetch])
-    end
+    result = find_slack_users(user_names_or_ids, find_groups: true)
+    result.cached_users.each { |user| refresh_slack_user_async(user) }
+    result.cached_users + fetch_users_from_slack(result.unknown_users)
   end
 
   private
 
-  def find_cached_slack_users(slack_users)
-    slack_users.each_with_object(cached: [], to_fetch: []) do |slack_user_name, result|
+  def find_slack_users(slack_users, find_groups: false)
+    slack_users.each_with_object(SearchResult.new) do |slack_user_name, result|
       if (slack_user = find_slack_user_in_db(slack_user_name))
-        result[:cached] << slack_user
-      elsif (group = find_group_on_slack(slack_user_name))
-        find_slack_users_in_group(group).tap do |group_result|
-          result[:cached] += group_result[:cached]
-          result[:to_fetch] += group_result[:to_fetch]
-        end
+        result.add_cached_user(slack_user)
+      elsif find_groups && (group = find_group_on_slack(slack_user_name))
+        result.merge!(find_slack_users(group))
       else
-        result[:to_fetch] << slack_user_name
+        result.add_unknown_user(slack_user_name)
       end
     end
   end
 
-  def find_slack_users_in_group(group)
-    group.each_with_object(cached: [], to_fetch: []) do |slack_user_name, result|
-      if (slack_user = find_slack_user_in_db(slack_user_name))
-        result[:cached] << slack_user
-      else
-        result[:to_fetch] << slack_user_name
-      end
-    end
-  end
-
-  def fetch_slack_users_from_slack(slack_users)
+  def fetch_users_from_slack(slack_users)
     fetch_slack_users_concurrently(slack_users).map do |slack_user_data|
       map_slack_user_data_to_new_user_record(slack_user_data)
     end

@@ -18,7 +18,6 @@ class SlackResponse
     }
   end
 
-  # rubocop:disable Metrics/AbcSize
   def stats(top_senders, top_receivers, most_reacted_thanks)
     {
       "text": "*Top 3 givers:* \n " \
@@ -44,7 +43,6 @@ class SlackResponse
       "Reactions: #{most_reacted_thanks[2].popularity} \n `#{most_reacted_thanks[2].text}` \n\n",
     }
   end
-  # rubocop:enable Metrics/AbcSize
 
   def actions(thanks)
     [
