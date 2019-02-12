@@ -26,11 +26,12 @@ jobs:
       - run:
           name: install dependencies
           command: |
-            bundle install --jobs=4 --retry=3 --path vendor/bundle
+            bundle check --path vendor/bundle || bundle install --jobs=4 --retry=3 --path vendor/bundle
+
       - save_cache:
-          paths:
-            - ./vendor/bundle
           key: v1-dependencies-{{ checksum "Gemfile.lock" }}
+          paths:
+            - vendor/bundle
 
       - run:
           name: Wait for DB
@@ -47,7 +48,7 @@ jobs:
 
       - run:
           name: Run Rubocop
-          command: bundle exec rubocop
+          command: bundle exec rubocop --config .rubocop.yml
 
       - store_test_results:
           path: /tmp/test-results
