@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "thanksy-webapp": "git+https://github.com/tooploox/thanksy-webapp.git"
+  },
+  "scripts": {
+    "postinstall": "./postinstall.sh"
+  }
+}
