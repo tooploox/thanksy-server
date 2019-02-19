@@ -5,7 +5,7 @@
   "env": {
     "AUTH_TOKEN": {
       "description": "A secret key needed for login in the client app.",
-      "value": "123456"
+      "value": ""
     }
   },
   "image": "heroku/ruby",
