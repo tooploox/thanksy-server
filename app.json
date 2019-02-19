@@ -1,0 +1,28 @@
+{
+  "name": "Thanksy",
+  "repository": "https://github.com/tooploox/thanksy",
+  "success_url": "/",
+  "env": {
+    "AUTH_TOKEN": {
+      "description": "A secret key needed for login in the client app.",
+      "value": "123456"
+    }
+  },
+  "image": "heroku/ruby",
+  "addons": [
+    {
+      "plan": "heroku-postgresql",
+      "options": {
+        "version": "10"
+      }
+    }
+  ],
+  "buildpacks": [
+    {
+      "url": "heroku/ruby"
+    },
+    {
+      "url": "heroku/nodejs"
+    }
+  ]
+}
