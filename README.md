@@ -6,6 +6,7 @@
 
     heroku create
     git push heroku master
+    heroku buildpacks:set heroku/nodejs
     heroku run rake db:migrate
     heroku open
 
