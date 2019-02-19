@@ -6,7 +6,8 @@
     "AUTH_TOKEN": {
       "description": "A secret key needed for login in the client app.",
       "value": ""
-    }
+    },
+    "API_URL": "/"
   },
   "image": "heroku/ruby",
   "addons": [
@@ -24,5 +25,8 @@
     {
       "url": "heroku/nodejs"
     }
-  ]
+  ],
+  "scripts": {
+    "postdeploy": "bundle exec rake db:migrate"
+  }
 }
