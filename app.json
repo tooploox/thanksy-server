@@ -24,5 +24,8 @@
         "version": "10"
       }
     }
-  ]
+  ],
+  "scripts": {
+    "postdeploy": "bundle exec rake db:migrate"
+  }
 }
