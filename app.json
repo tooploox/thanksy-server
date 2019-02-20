@@ -10,14 +10,6 @@
     "API_URL": "/"
   },
   "image": "heroku/ruby",
-  "addons": [
-    {
-      "plan": "heroku-postgresql",
-      "options": {
-        "version": "10"
-      }
-    }
-  ],
   "buildpacks": [
     {
       "url": "heroku/ruby"
@@ -26,7 +18,12 @@
       "url": "heroku/nodejs"
     }
   ],
-  "scripts": {
-    "postdeploy": "bundle exec rake db:migrate"
-  }
+  "addons": [
+    {
+      "plan": "heroku-postgresql",
+      "options": {
+        "version": "10"
+      }
+    }
+  ]
 }
