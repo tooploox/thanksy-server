@@ -7,7 +7,7 @@ class OpenPostDialog
   end
 
   def perform(post_params)
-    send_dialog_to_slack(post_params.response_url, post_params.trigger_id)
+    send_dialog_to_slack(post_params[:response_url], post_params[:trigger_id])
   end
 
   private
