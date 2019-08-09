@@ -5,4 +5,6 @@ Rails.application.routes.draw do
   post "thanks/stats", to: "thanks#stats"
   post "thanks", to: "thanks#create"
   post "thanks/react", to: "thanks#update"
+
+  post "post", to: "posts#create"
 end
