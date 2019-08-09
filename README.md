@@ -4,11 +4,12 @@
 
 ## Step 1: App deployment
 
-    heroku create
-    git push heroku master
-    heroku buildpacks:set heroku/nodejs
-    heroku run rake db:migrate
-    heroku open
+    $ heroku create
+    $ git push heroku master
+    $ heroku buildpacks:set heroku/ruby
+    $ heroku buildpacks:set heroku/nodejs
+    $ heroku run rake db:migrate
+    $ heroku open
 
 
 Alternatively, you can deploy your own copy of the app using the web-based flow:
