@@ -31,11 +31,13 @@ module Adapters
     end
 
     def send(response_url, response)
-      @conn.post do |req|
+      r = @conn.post do |req|
         req.url response_url
-        req.headers["Content-Type"] = "application/json"
+        req.headers["content-type"] = "application/json"
         req.body = response.to_json
       end
+      puts r.body
+      puts r.status
     end
   end
 end

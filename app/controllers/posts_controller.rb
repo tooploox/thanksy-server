@@ -7,7 +7,7 @@ class PostsController < ApplicationController
   def create
     puts "Hello"
     OpenPostDialog.new.perform(post_params)
-    render json: { text: 'dialog open' }
+    render json: {}
   end
 
   private
