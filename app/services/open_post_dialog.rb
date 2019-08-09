@@ -35,6 +35,9 @@ class OpenPostDialog
         ],
       },
     }
+    puts dialog
+    puts response_url
+    puts trigger_id
     @slack_client.send(response_url, dialog)
   end
 end
