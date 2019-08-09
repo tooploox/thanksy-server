@@ -26,6 +26,6 @@ class FetchStatistics
 
   def send_thanksy_to_slack(params, top_senders, top_receivers, most_reacted_thanks)
     response = SlackResponse.new.stats(top_senders, top_receivers, most_reacted_thanks)
-    @slack_client.send_thanks_to_channel(params[:response_url], response)
+    @slack_client.send(params[:response_url], response)
   end
 end

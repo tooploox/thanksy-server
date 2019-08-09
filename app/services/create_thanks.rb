@@ -48,10 +48,10 @@ class CreateThanks
 
   def send_thanksy_to_slack(response_url, thanks_givers_user_name, thanks)
     response = SlackResponse.new.in_channel(thanks_givers_user_name, thanks)
-    @slack_client.send_thanks_to_channel(response_url, response)
+    @slack_client.send(response_url, response)
   end
 
   def notify_slack_about_error(response_url, message)
-    @slack_client.send_thanks_to_channel(response_url, text: message)
+    @slack_client.send(response_url, text: message)
   end
 end

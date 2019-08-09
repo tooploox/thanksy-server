@@ -17,7 +17,7 @@ module Adapters
       @groups
     end
 
-    def send_thanks_to_channel(response_url, response)
+    def send(response_url, response)
       @responses[response_url] = response
     end
   end

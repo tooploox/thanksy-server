@@ -30,7 +30,7 @@ module Adapters
       nil
     end
 
-    def send_thanks_to_channel(response_url, response)
+    def send(response_url, response)
       @conn.post do |req|
         req.url response_url
         req.headers["Content-Type"] = "application/json"
