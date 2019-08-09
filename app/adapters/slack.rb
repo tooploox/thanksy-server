@@ -36,6 +36,7 @@ module Adapters
         req.headers["content-type"] = "application/json"
         req.body = response.to_json
       end
+      puts response.to_json
       puts r.body
       puts r.status
     end

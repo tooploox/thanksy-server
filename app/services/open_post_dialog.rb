@@ -38,6 +38,6 @@ class OpenPostDialog
     puts dialog
     puts response_url
     puts trigger_id
-    @slack_client.send(response_url, dialog)
+    @slack_client.send(response_url, {text: dialog })
   end
 end
