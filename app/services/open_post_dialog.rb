@@ -14,7 +14,6 @@ class OpenPostDialog
 
   def send_dialog_to_slack(response_url, trigger_id)
     dialog = {
-      "token": ENV["SLACK_API_TOKEN"],
       "trigger_id": trigger_id,
       "dialog": {
         "callback_id": "post-add-1234",
@@ -24,9 +23,47 @@ class OpenPostDialog
         "state": "Limo",
         "elements": [
           {
+            "type": "select",
+            "label": "Category",
+            "name": "post_category",
+            "options": [
+              {
+                "label": "Reminder",
+                "value": "reminder",
+              },
+              {
+                "label": "Event",
+                "value": "event",
+              },
+              {
+                "label": "Urgent",
+                "value": "urgent",
+              },
+              {
+                "label": "Info",
+                "value": "info",
+              },
+            ],
+          },
+          {
             "type": "text",
-            "label": "Post title",
+            "label": "Title",
             "name": "post_title",
+          },
+          {
+            "type": "text",
+            "label": "Publish date",
+            "name": "post_publish_at",
+          },
+          {
+            "type": "text",
+            "label": "Lifespan (in hours)",
+            "name": "post_lifespan",
+          },
+          {
+            "type": "text",
+            "label": "Message",
+            "name": "post_message",
           },
         ],
       },
