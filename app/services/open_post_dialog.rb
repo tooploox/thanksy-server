@@ -26,13 +26,14 @@ class OpenPostDialog
             "type": "text",
             "label": "Post title",
             "name": "post_title",
-          }
+          },
         ],
       },
     }
     puts dialog
     puts response_url
     puts trigger_id
-    @slack_client.send(response_url, dialog)
+    u = "https://slack.com/api/dialog.open"
+    @slack_client.send(u, dialog)
   end
 end
