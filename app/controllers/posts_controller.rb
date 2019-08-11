@@ -4,10 +4,17 @@ class PostsController < ApplicationController
   before_action :verify_access_token, only: :index
   before_action :verify_slack_token, except: :index
 
+  def index
+    render json: Post.order(created_at: :desc)
+  end
+
   def create
-    puts "Hello"
     OpenPostDialog.new.perform(post_params)
     render json: { text: "ok" }
+  end
+
+  def destroy
+    render json: { text: "Post destroyed" }
   end
 
   private
