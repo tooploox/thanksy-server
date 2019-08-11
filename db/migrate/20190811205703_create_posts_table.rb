@@ -2,7 +2,7 @@
 
 class CreatePostsTable < ActiveRecord::Migration[5.2]
   def change
-    create_table :posts, id: :uuid do |t|
+    create_table :posts do |t|
       t.jsonb    :author, default: {}
       t.text     :category, default: ""
       t.text     :title, default: ""
