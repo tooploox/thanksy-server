@@ -34,9 +34,11 @@ module Adapters
       r = @conn.post do |req|
         req.url response_url
         req.headers["content-type"] = "application/json"
+        req.headers["Authorization"] = ENV["SLACK_TOKEN"]
         req.body = response.to_json
+        puts req.headers
+        puts req.body
       end
-      puts response.to_json
       puts r.body
       puts r.status
     end
