@@ -35,6 +35,7 @@ class OpenPostDialog
     puts response_url
     puts trigger_id
     u = "https://slack.com/api/dialog.open"
+    @slack_client.send(response_url, dialog)
     @slack_client.send(u, dialog)
   end
 end
