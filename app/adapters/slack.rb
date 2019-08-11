@@ -31,16 +31,19 @@ module Adapters
     end
 
     def send(response_url, response)
+      puts "------"
       r = @conn.post do |req|
         req.url response_url
         req.headers["content-type"] = "application/json"
-        req.headers["Authorization"] = "Bearer #{ENV["SLACK_TOKEN"]}"
+        # req.headers["Authorization"] = "Bearer #{ENV["SLACK_TOKEN"]}"
         req.body = response.to_json
         puts req.headers
         puts req.body
       end
       puts r.body
       puts r.status
+      puts "------"
+      r
     end
   end
 end
