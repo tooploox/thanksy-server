@@ -14,7 +14,7 @@ class OpenPostDialog
 
   def send_dialog_to_slack(response_url, trigger_id)
     dialog = {
-      "token": ENV["SLACK_TOKEN"],
+      "token": ENV["SLACK_API_TOKEN"],
       "trigger_id": trigger_id,
       "dialog": {
         "callback_id": "post-add-1234",
