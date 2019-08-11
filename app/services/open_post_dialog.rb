@@ -16,28 +16,23 @@ class OpenPostDialog
     dialog = {
       "trigger_id": trigger_id,
       "dialog": {
-        "callback_id": "post-add-#{SecureRandom.uuid}",
+        "callback_id": "post-add-1234",
         "title": "Add a post",
         "submit_label": "Post",
-        "notify_on_cancel": true,
+        "notify_on_cancel": false,
         "state": "Limo",
         "elements": [
           {
             "type": "text",
             "label": "Post title",
             "name": "post_title",
-          },
-          {
-            "type": "text",
-            "label": "Post date",
-            "name": "post_scheduled_at",
-          },
+          }
         ],
       },
     }
     puts dialog
     puts response_url
     puts trigger_id
-    @slack_client.send(response_url, {text: dialog })
+    @slack_client.send(response_url, dialog)
   end
 end
