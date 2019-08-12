@@ -8,14 +8,13 @@ class OpenPostDialog
     @slack_client = slack_client
   end
 
-  def perform(post_params)
-    send_dialog_to_slack(post_params[:trigger_id])
+  def add(trigger_id)
+    dialog = SlackPostDialog.new.post_add(trigger_id)
+    @slack_client.send(API, dialog)
   end
 
-  private
-
-  def send_dialog_to_slack(trigger_id)
-    dialog = SlackPostDialog.new.post_add(trigger_id)
+  def edit(trigger_id, post)
+    dialog = SlackPostDialog.new.post_edit(trigger_id, post)
     @slack_client.send(API, dialog)
   end
 end

@@ -16,7 +16,7 @@ class SlackPostDialog
     }
   end
 
-  def post_edit(trigger_id)
+  def post_edit(trigger_id, post)
     {
       "trigger_id": trigger_id,
       "dialog": {
@@ -25,12 +25,66 @@ class SlackPostDialog
         "submit_label": "Update",
         "notify_on_cancel": true,
         "state": "Limo",
-        "elements": elements,
+        "elements": edit_elements(post),
       },
     }
   end
 
   private
+
+  def edit_elements(post)
+    [
+      {
+        "type": "select",
+        "label": "Category",
+        "name": "post_category",
+        "value": post.category || "",
+        "options": [
+          {
+            "label": "Reminder",
+            "value": "reminder",
+          },
+          {
+            "label": "Event",
+            "value": "event",
+          },
+          {
+            "label": "Urgent",
+            "value": "urgent",
+          },
+          {
+            "label": "Info",
+            "value": "info",
+          },
+        ],
+      },
+      {
+        "type": "text",
+        "label": "Title",
+        "name": "post_title",
+        "value": post.title || "",
+      },
+      {
+        "type": "text",
+        "label": "Publish date",
+        "hint": "YYYY-MM-DD HH:MM",
+        "name": "post_publish_at",
+        "value": post.publish_start.strftime("%F %H:%M"),
+      },
+      {
+        "type": "text",
+        "label": "Lifespan (in hours)",
+        "name": "post_lifespan",
+        "value": (post.publish_end - post.publish_start) / 1.hour,
+      },
+      {
+        "type": "textarea",
+        "label": "Message",
+        "name": "post_message",
+        "value": post.text,
+      },
+    ]
+  end
 
   def elements
     [

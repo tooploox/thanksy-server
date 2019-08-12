@@ -9,12 +9,22 @@ class PostsController < ApplicationController
   end
 
   def list
-    ListPosts.perform_async(params)
-    render json: { text: "Listing info posts!" }
+    if params["text"].&to_i.&positive?
+      post = Post.find(params["text"].to_i)
+      if post
+        OpenPostDialog.new.edit(post_params[:trigger_id], post)
+        render json: { text: "Editing post #{post.title}" }
+      else
+        render json: { ok: false, text: "Post with ID #{post.title} not found" }
+      end
+    else
+      ListPosts.perform_async(params)
+      render json: { text: "Listing info posts!" }
+    end
   end
 
   def create
-    OpenPostDialog.new.perform(post_params)
+    OpenPostDialog.new.add(post_params[:trigger_id])
     render json: { text: "ok" }
   end
 
