@@ -5,8 +5,9 @@ Rails.application.routes.draw do
   post "thanks/stats", to: "thanks#stats"
   post "thanks", to: "thanks#create"
 
-  get "posts/list", to: "posts#index"
-  post "post", to: "posts#create"
+  get "posts", to: "posts#index"
+  post "posts/list", to: "posts#list"
+  post "posts/new", to: "posts#create"
 
   post "callbacks", to: "callbacks#exec"
 end

@@ -8,14 +8,10 @@ class CreatePost
   end
 
   def perform(payload)
-    puts "add post"
     author = find_author(payload["user"]["name"])
     data = payload["submission"]
     publish_at, publish_end = publication_dates(data)
     create_post(author, publish_at, publish_end, data)
-
-    puts YAML.dump(author)
-    puts YAML.dump(payload)
   rescue FindSlackUsers::SlackUserNotFound => e
     notify_slack_about_error(payload[:response_url], e.message)
   end

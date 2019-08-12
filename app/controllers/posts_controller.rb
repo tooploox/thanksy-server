@@ -8,6 +8,11 @@ class PostsController < ApplicationController
     render json: Post.order(created_at: :desc)
   end
 
+  def list
+    ListPosts.perform_async(params)
+    render json: { text: "Listing info posts!" }
+  end
+
   def create
     OpenPostDialog.new.perform(post_params)
     render json: { text: "ok" }
