@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class HandleReaction
-  def call(params)
-    thanks_id, action_name, original_message = process_payload(params)
+  def call(payload)
+    thanks_id, action_name, original_message = process_payload(payload)
     thanks = find_thanks(thanks_id)
     apply_action(action_name, thanks)
     original_message["attachments"][0]["actions"] = SlackResponse.new.actions(thanks)
@@ -11,8 +11,7 @@ class HandleReaction
 
   private
 
-  def process_payload(params)
-    payload = JSON.parse(params["payload"])
+  def process_payload(payload)
     original_message = payload["original_message"]
     action_name = payload["actions"][0]["name"]
     thanks_id = payload["actions"][0]["value"]
