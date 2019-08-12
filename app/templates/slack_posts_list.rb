@@ -14,7 +14,7 @@ class SlackPostsList
     out = "*Active Posts:* \n"
     out += "ID  |  Title  |  Author  | PublishAt | PublishedTill \n"
     posts.each do |p|
-      out += "*#{p.id}* | *#{p.title}* | #{p.author['name']} | #{p.publish_start} | #{p.publish_end} \n"
+      out += "*#{p.id}* | *#{p.title}* | #{p.author['name']} | #{p.publish_start.strftime('%F %H:%M')} | #{p.publish_end.strftime('%F %H:%M')} \n"
     end
     out
   end

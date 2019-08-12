@@ -8,7 +8,9 @@ class ListPosts
   end
 
   def perform(params)
-    posts = Post.all
+    posts = Post
+            .where("publish_start <= ? AND publish_end >= ?", DateTime.now, DateTime.now)
+            .order_by(:publish_start)
     send_posts_to_slack(params, posts)
   end
 
