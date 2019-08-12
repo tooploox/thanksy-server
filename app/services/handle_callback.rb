@@ -5,6 +5,7 @@ class HandleCallback
   def call(params)
     payload = JSON.parse(params["payload"])
     handle(payload)
+    payload
   end
 
   private
@@ -32,7 +33,7 @@ class HandleCallback
   def handle_dialog(payload)
     case payload["callback_id"].to_sym
     when :post_add
-      CreatePost.new.(payload)
+      CreatePost.perform_async(payload)
     when :post_edit
       UpdatePost.new.(payload)
     else
