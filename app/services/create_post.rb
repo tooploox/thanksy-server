@@ -32,8 +32,8 @@ class CreatePost
     Post.create(
       author: author,
       category: payload["post_category"],
-      title: payload["title"],
-      text: payload["text"],
+      title: payload["post_title"],
+      text: payload["post_message"],
       publish_start: publish_start,
       publish_end: publish_end,
     )
@@ -43,8 +43,8 @@ class CreatePost
     @slack_client.send(response_url, text: message)
   end
 
-  def find_author(giver_name)
-    find_slack_users([giver_name]).first
+  def find_author(name)
+    find_slack_users([name]).first
   end
 
   def find_slack_users(user_names_or_ids)
