@@ -18,7 +18,7 @@ class OpenPostDialog
       "dialog": {
         "callback_id": "post-add-1234",
         "title": "Add a post",
-        "submit_label": "Post",
+        "submit_label": "Create",
         "notify_on_cancel": false,
         "state": "Limo",
         "elements": [
