@@ -5,7 +5,7 @@ class CallbacksController < ApplicationController
 
   def process
     puts "AAA"
-    HandleCallback.new.call(params)
+    # HandleCallback.new.call(params)
     puts "AAA"
     render json: { text: "ok" }
   end
