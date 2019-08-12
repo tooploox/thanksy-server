@@ -11,9 +11,10 @@ class SlackPostsList
   private
 
   def list(posts)
-    out = "<b>Active Posts:</b> \n"
+    out = "*Active Posts:* \n"
+    out += "ID  |  Title  |  Author  | PublishAt | PublishedTill \n"
     posts.each do |p|
-      out += "#{p.id} | #{p.title} | #{p.publish_start} \n"
+      out += "*#{p.id}* | *#{p.title}* | #{p.author['name']} | #{p.publish_start} | #{p.publish_end} \n"
     end
     out
   end
