@@ -65,14 +65,14 @@ class SlackPostDialog
       {
         "type": "text",
         "label": "Publish date",
-        "optional": true,
         "name": "post_publish_at",
-        "value": DateTime.now.strftime('%F %H:%M'),
+        "value": DateTime.now.strftime("%F %H:%M"),
       },
       {
         "type": "text",
         "label": "Lifespan (in hours)",
         "name": "post_lifespan",
+        "value": 24,
       },
       {
         "type": "textarea",

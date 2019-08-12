@@ -22,7 +22,7 @@ class CreatePost
   private
 
   def publication_dates(payload)
-    publish_at = payload["post_publish_at"].empty? ? DateTime.now : DateTime.parse(payload["post_publish_at"])
+    publish_at = DateTime.parse(payload["post_publish_at"])
     publish_end = publish_at + payload["lifespan"].to_i.hours
     [publish_at, publish_end]
   end
