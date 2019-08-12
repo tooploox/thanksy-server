@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class HandlePostEdit
+class UpdatePost
   def call(payload)
     puts "edit post"
   end

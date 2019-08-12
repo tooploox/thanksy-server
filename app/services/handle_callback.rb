@@ -32,9 +32,9 @@ class HandleCallback
   def handle_dialog(payload)
     case payload["callback_id"].to_sym
     when :post_add
-      HandlePostAdd.new.(payload)
+      CreatePost.new.(payload)
     when :post_edit
-      HandlePostEdit.new.(payload)
+      UpdatePost.new.(payload)
     else
       logger.warn "UnknownCallbackId #{payload['callback_id']} for dialog_submission"
     end
