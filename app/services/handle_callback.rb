@@ -5,7 +5,6 @@ class HandleCallback
   def call(params)
     payload = JSON.parse(params["payload"])
     handle(payload)
-    payload
   end
 
   private
