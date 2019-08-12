@@ -10,8 +10,9 @@ class CreatePost
   def perform(payload)
     puts "add post"
     author = find_author(payload["user"]["name"])
-    publish_at, publish_end = publication_dates(payload)
-    create_post(author, publish_at, publish_end, payload)
+    data = payload["submission"]
+    publish_at, publish_end = publication_dates(data)
+    create_post(author, publish_at, publish_end, data)
 
     puts YAML.dump(author)
     puts YAML.dump(payload)
