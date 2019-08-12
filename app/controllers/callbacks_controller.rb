@@ -5,6 +5,6 @@ class CallbacksController < ApplicationController
 
   def exec
     HandleCallback.new.(params)
-    render json: { ok: true }
+    render json: { text: "zapamietam" }
   end
 end
