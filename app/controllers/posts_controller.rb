@@ -5,13 +5,7 @@ class PostsController < ApplicationController
   before_action :verify_slack_token, except: :index
 
   def index
-    now = DateTime.now
-    posts = Post
-            .where("
-              (publish_start <= ? AND publish_end >= ?)
-              OR publish_start >= ?", now, now, now)
-            .order_by(:publish_start)
-    render json: posts
+    render json: active_posts
   end
 
   def list
@@ -29,6 +23,12 @@ class PostsController < ApplicationController
   end
 
   private
+
+  def active_posts
+    Post
+      .where("publish_start <= ? AND publish_end >= ?", DateTime.now, DateTime.now)
+      .order(:publish_start)
+  end
 
   def post_params
     params.permit(:trigger_id, :response_url)
