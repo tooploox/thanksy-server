@@ -18,6 +18,6 @@ class ApplicationController < ActionController::API
     unless params["token"] == ENV["SLACK_TOKEN"] ||
         JSON.parse(params["payload"])["token"] == ENV["SLACK_TOKEN"]
       render json: "Invalid slack token. Contact with support please!"
-    end
+    end 
   end
 end

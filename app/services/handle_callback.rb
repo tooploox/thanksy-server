@@ -39,4 +39,8 @@ class HandleCallback
       logger.warn "UnknownCallbackId #{payload['callback_id']} for dialog_submission"
     end
   end
+
+  def logger
+    Rails.logger
+  end
 end
