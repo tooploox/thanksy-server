@@ -16,7 +16,7 @@ class HandleCallback
     when :dialog_submission.to_s
       handle_dialog(payload)
     else
-      puts "UnknownCallbackType #{payload['type']}"
+      logger.warn "UnknownCallbackType #{payload['type']}"
     end
   end
 
@@ -25,18 +25,18 @@ class HandleCallback
     when :thanksy_response
       HandleReaction.new.(payload)
     else
-      puts "UnknownCallbackId #{payload['callback_id']} for interactive_message"
+      logger.warn "UnknownCallbackId #{payload['callback_id']} for interactive_message"
     end
   end
 
   def handle_dialog(payload)
     case payload["callback_id"].to_sym
     when :post_add
-      HandleAddPost.new.(payload)
+      HandlePostAdd.new.(payload)
     when :post_edit
-      HandleEditPost.new.(payload)
+      HandlePostEdit.new.(payload)
     else
-      puts "UnknownCallbackId #{payload['callback_id']} for dialog_submission"
+      logger.warn "UnknownCallbackId #{payload['callback_id']} for dialog_submission"
     end
   end
 end
