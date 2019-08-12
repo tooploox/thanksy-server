@@ -65,7 +65,9 @@ class SlackPostDialog
       {
         "type": "text",
         "label": "Publish date",
+        "optional": true,
         "name": "post_publish_at",
+        "value": DateTime.now.strftime('%F %H:%M'),
       },
       {
         "type": "text",
@@ -73,7 +75,7 @@ class SlackPostDialog
         "name": "post_lifespan",
       },
       {
-        "type": "text",
+        "type": "textarea",
         "label": "Message",
         "name": "post_message",
       },

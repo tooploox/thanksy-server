@@ -9,18 +9,23 @@ class CreatePost
 
   def perform(payload)
     puts "add post"
+    author = find_author(payload["user"]["name"])
+    publish_at, publish_end = publication_dates(payload)
+    create_post(author, publish_at, publish_end, payload)
+
     puts YAML.dump(author)
     puts YAML.dump(payload)
-
-    author = find_author(payload["user"]["name"])
-    publish_at = DateTime.parse(payload["post_publish_at"])
-    publish_end = publish_at + payload["lifespan"].to_i.hours
-    create_post(author, publish_at, publish_end, payload)
   rescue FindSlackUsers::SlackUserNotFound => e
     notify_slack_about_error(payload[:response_url], e.message)
   end
 
   private
+
+  def publication_dates(payload)
+    publish_at = payload["post_publish_at"].empty? ? DateTime.now : DateTime.parse(payload["post_publish_at"])
+    publish_end = publish_at + payload["lifespan"].to_i.hours
+    [publish_at, publish_end]
+  end
 
   def create_post(author, publish_start, publish_end, payload)
     Post.create(
