@@ -30,4 +30,12 @@ class CreatePost
   def notify_slack_about_error(response_url, message)
     @slack_client.send(response_url, text: message)
   end
+
+  def find_giver(giver_name)
+    find_slack_users([giver_name]).first
+  end
+
+  def find_slack_users(user_names_or_ids)
+    FindSlackUsers.new(@slack_client).(user_names_or_ids)
+  end
 end
