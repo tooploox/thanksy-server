@@ -3,7 +3,7 @@
 class CallbacksController < ApplicationController
   # before_action :verify_slack_token
 
-  def process
+  def dispach
     puts "AAA"
     # HandleCallback.new.(params)
     puts "AAA"
