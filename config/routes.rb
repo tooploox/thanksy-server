@@ -8,5 +8,5 @@ Rails.application.routes.draw do
   get "posts/list", to: "posts#index"
   post "post", to: "posts#create"
 
-  post "callbacks", to: "callbacks#do"
+  post "callbacks", to: "callbacks#exec"
 end
