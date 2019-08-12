@@ -9,7 +9,7 @@ class PostsController < ApplicationController
   end
 
   def list
-    if params["text"].&to_i.&positive?
+    if params["text"]&.to_i&.positive?
       post = Post.find(params["text"].to_i)
       if post
         OpenPostDialog.new.edit(post_params[:trigger_id], post)
