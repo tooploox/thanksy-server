@@ -4,6 +4,9 @@ class CallbacksController < ApplicationController
   before_action :verify_slack_token
 
   def process
-    render json: HandleCallback.new.(params)
+    puts "AAA"
+    HandleCallback.new.(params)
+    puts "AAA"
+    render json: { text: "ok" }
   end
 end
