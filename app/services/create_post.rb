@@ -24,7 +24,7 @@ class CreatePost
 
   def publication_dates(payload)
     publish_at = DateTime.parse(payload["post_publish_at"])
-    publish_end = publish_at + payload["lifespan"].to_i.hours
+    publish_end = publish_at + payload["post_lifespan"].to_i.hours
     [publish_at, publish_end]
   end
 
