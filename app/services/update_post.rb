@@ -9,7 +9,7 @@ class UpdatePost
 
   def perform(payload)
     puts "edit post"
-    @response_url = payload[:response_url]
+    @response_url = payload["response_url"]
     post_id = payload["state"]&.to_i
     puts post_id
     post = Post.find(post_id)
