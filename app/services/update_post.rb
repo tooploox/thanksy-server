@@ -9,18 +9,26 @@ class UpdatePost
 
   def perform(payload)
     puts "edit post"
+    @response_url = payload[:response_url]
     post_id = payload["state"]&.to_i
-    data = payload["submission"]
     puts post_id
-    puts data
-    # if data["post_destroy"] == "yes"
-    #   post.destroy
-    # else
-    #   # publish_at, publish_end = publication_dates(data)
-    #   # update_post(publish_at, publish_end, data)
-    # end
-  rescue FindSlackUsers::SlackUserNotFound => e
-    notify_slack_about_error(payload[:response_url], e.message)
+    post = Post.find(post_id)
+    if post
+      data = payload["submission"]
+      puts data
+      if data["post_destroy"] == "yes"
+        post.destroy
+        notify_slack("Post #{post.id}:#{post.title} successfully destroyed.")
+      else
+        if post.update(post_params(data))
+          notify_slack("Post #{post.id}:#{post.title} successfully updated.")
+        else
+          notify_slack("Error updating Post: #{post.errors}.")
+        end
+      end
+    else
+      notify_slack("Could not find Post with ID:#{post.id}.")
+    end
   end
 
   private
@@ -31,18 +39,18 @@ class UpdatePost
     [publish_at, publish_end]
   end
 
-  def update_post(author, publish_start, publish_end, payload)
-    Post.create(
-      author: author,
+  def post_params(payload)
+    publish_start, publish_end = publication_dates(payload)
+    {
       category: payload["post_category"],
       title: payload["post_title"],
       text: payload["post_message"],
       publish_start: publish_start,
       publish_end: publish_end,
-    )
+    }
   end
 
-  def notify_slack_about_error(response_url, message)
-    @slack_client.send(response_url, text: message)
+  def notify_slack(message)
+    @slack_client.send(@response_url, text: message)
   end
 end
