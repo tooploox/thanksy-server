@@ -8,14 +8,11 @@ class UpdatePost
   end
 
   def perform(payload)
-    puts "edit post"
     @response_url = payload["response_url"]
     post_id = payload["state"]&.to_i
-    puts post_id
-    post = Post.find(post_id)
+    post = Post.find_by_id(post_id)
     if post
       data = payload["submission"]
-      puts data
       if data["post_destroy"] == "yes"
         post.destroy
         notify_slack("Post #{post.id}:#{post.title} successfully destroyed.")

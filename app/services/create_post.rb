@@ -13,7 +13,7 @@ class CreatePost
     publish_at, publish_end = publication_dates(data)
     create_post(author, publish_at, publish_end, data)
   rescue FindSlackUsers::SlackUserNotFound => e
-    notify_slack_about_error(payload[:response_url], e.message)
+    notify_slack_about_error(payload["response_url"], e.message)
   end
 
   private
