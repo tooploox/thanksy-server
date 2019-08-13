@@ -10,10 +10,10 @@ class PostsController < ApplicationController
 
   def list
     if params["text"]&.to_i&.positive?
-      post = Post.find(params["text"].to_i)
+      post = Post.find_by_id(params["text"].to_i)
       if post
         OpenPostDialog.new.edit(post_params[:trigger_id], post)
-        render json: { text: "Editing post #{post.title}" }
+        render :ok
       else
         render json: { ok: false, text: "Post with ID #{post.title} not found" }
       end
