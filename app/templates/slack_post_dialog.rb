@@ -10,7 +10,7 @@ class SlackPostDialog
         "title": "Add post",
         "submit_label": "Create",
         "notify_on_cancel": true,
-        "state": "Limo",
+        "state": "new",
         "elements": elements,
       },
     }
@@ -24,7 +24,7 @@ class SlackPostDialog
         "title": "Edit post",
         "submit_label": "Update",
         "notify_on_cancel": true,
-        "state": "Limo",
+        "state": post.id,
         "elements": edit_elements(post),
       },
     }
@@ -73,6 +73,7 @@ class SlackPostDialog
       },
       {
         "type": "text",
+        "subtype": "number",
         "label": "Lifespan (in hours)",
         "name": "post_lifespan",
         "value": (post.publish_end - post.publish_start) / 1.hour,
@@ -99,7 +100,7 @@ class SlackPostDialog
           },
           {
             "label": "Yes, destroy",
-            "value": "destroy",
+            "value": "yes",
           },
         ],
       },
@@ -144,6 +145,7 @@ class SlackPostDialog
       },
       {
         "type": "text",
+        "subtype": "number",
         "label": "Lifespan (in hours)",
         "name": "post_lifespan",
         "value": 24,

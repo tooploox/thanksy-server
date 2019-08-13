@@ -34,7 +34,7 @@ class HandleCallback
     when :post_add
       CreatePost.perform_async(payload)
     when :post_edit
-      UpdatePost.new.(payload)
+      UpdatePost.perform_async(payload)
     else
       logger.warn "UnknownCallbackId #{payload['callback_id']} for dialog_submission"
     end
