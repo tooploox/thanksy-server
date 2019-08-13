@@ -15,11 +15,13 @@ class HandleCallback
   private
 
   def handle(payload)
-    case payload["type"]
-    when :interactive_message.to_s
+    case payload["type"].to_sym
+    when :interactive_message
       handle_interactive_message(payload)
-    when :dialog_submission.to_s
+    when :dialog_submission
       handle_dialog(payload)
+    when :dialog_cancellation
+      { ok: true }
     else
       logger.warn "UnknownCallbackType #{payload['type']}"
     end

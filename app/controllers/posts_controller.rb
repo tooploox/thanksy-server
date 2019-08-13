@@ -25,7 +25,7 @@ class PostsController < ApplicationController
 
   def create
     OpenPostDialog.new.add(post_params[:trigger_id])
-    render json: { text: "ok" }
+    render :ok
   end
 
   def destroy
