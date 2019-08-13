@@ -2,10 +2,6 @@
 
 class HandleCallback
 
-  def initialize(slack_client = ::Adapters::Slack.new)
-    @slack_client = slack_client
-  end
-
   def call(params)
     payload = JSON.parse(params["payload"])
     @response_url = payload["response_url"]
@@ -51,7 +47,11 @@ class HandleCallback
     Rails.logger
   end
 
+  def slack_client
+    @slack_client ||= ::Adapters::Slack.new
+  end
+
   def notify_slack(msg)
-    @slack_client.send(@response_url, msg)
+    slack_client.send(@response_url, msg)
   end
 end
