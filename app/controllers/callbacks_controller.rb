@@ -5,6 +5,8 @@ class CallbacksController < ApplicationController
 
   def exec
     # render json: HandleCallback.new.(params)
-    render nothing: true, status: 200
+    # render nothing: true, status: 200
+    puts "eho status ok"
+    render status: :ok
   end
 end
