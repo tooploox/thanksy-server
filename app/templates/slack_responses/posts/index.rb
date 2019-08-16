@@ -15,7 +15,7 @@ module SlackResponses
       def buttons
         [
           {
-            text: "*What do you want to do today?*",
+            text: "",
             fallback: "You are unable to do it, sorry",
             callback_id: "post_actions",
             color: "#228B22",
