@@ -13,10 +13,7 @@ class UpdatePost
     post = Post.find_by_id(post_id)
     if post
       data = payload["submission"]
-      if data["post_destroy"] == "yes"
-        post.destroy
-        notify_slack("Post #{post.id}:#{post.title} successfully destroyed.")
-      elsif post.update(post_params(data))
+      if post.update(post_params(data))
         notify_slack("Post #{post.id}:#{post.title} successfully updated.")
       else
         notify_slack("Error updating Post: #{post.errors}.")

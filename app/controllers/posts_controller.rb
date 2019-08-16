@@ -10,12 +10,12 @@ class PostsController < ApplicationController
 
   def list
     ListPosts.perform_async(params)
-    render json: { text: "Listing info posts!" }
+    head :ok, content_type: "application/json"
   end
 
   def create
     OpenPostDialog.new.add(post_params[:trigger_id])
-    render :ok
+    head :ok, content_type: "application/json"
   end
 
   def destroy
