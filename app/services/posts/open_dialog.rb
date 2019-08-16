@@ -11,7 +11,7 @@ module Posts
     end
 
     def perform(params, post = nil)
-      trigger_id = params["trigger_id"]
+      trigger_id = params[:trigger_id]
       dialog = if post
                  SlackPostDialog.new.post_edit(trigger_id, post)
                else
