@@ -9,12 +9,6 @@ module Posts
     end
 
     def perform(params)
-      send_to_slack(params)
-    end
-
-    private
-
-    def send_posts_to_slack(params)
       response = SlackResponses::Posts::Index.new.()
       @slack_client.send(params[:response_url], response)
     end
