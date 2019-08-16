@@ -46,7 +46,7 @@ class UpdatePost
     [publish_at, publish_end]
   rescue ArgumentError => _
     err = [{ name: "post_publish_at", error: "Date format is not valid." }]
-    raise ValidationError.new.payload(err)
+    raise ValidationError, "DateError", err
   end
 
   def post_params(payload)
