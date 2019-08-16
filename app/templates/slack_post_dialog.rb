@@ -36,7 +36,7 @@ class SlackPostDialog
       category(post.category),
       title(post.title),
       publish_date(post.publish_start.strftime("%F %H:%M")),
-      lifespan((post.publish_end - post.publish_start) / 1.hour),
+      lifespan(((post.publish_end - post.publish_start) / 1.hour).round),
       message(post.text),
     ]
   end
