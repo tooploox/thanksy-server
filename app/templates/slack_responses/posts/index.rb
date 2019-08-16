@@ -5,7 +5,7 @@ module SlackResponses
     class Index
       def call
         {
-          text: "*Posts:*",
+          text: "",
           attachments: buttons,
         }
       end
@@ -15,7 +15,7 @@ module SlackResponses
       def buttons
         [
           {
-            text: "",
+            text: "*What do you want to do today?*",
             fallback: "You are unable to do it, sorry",
             callback_id: "post_actions",
             color: "#228B22",
