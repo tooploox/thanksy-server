@@ -24,6 +24,7 @@ class HandleCallback
       { ok: true }
     else
       logger.warn "UnknownCallbackType #{payload['type']}"
+      {}
     end
   end
 
