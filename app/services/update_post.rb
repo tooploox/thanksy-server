@@ -2,7 +2,8 @@
 
 class UpdatePost
   class ValidationError < StandardError
-    attr_accessor :payload
+    attr_reader :payload
+    attr_writer :payload
   end
   include SuckerPunch::Job
 
