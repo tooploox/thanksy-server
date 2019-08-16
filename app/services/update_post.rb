@@ -3,8 +3,13 @@
 class UpdatePost
   class ValidationError < StandardError
     attr_reader :payload
-    attr_writer :payload
+
+    def initialize(msg, payload)
+      super(msg)
+      @payload = payload
+    end
   end
+
   include SuckerPunch::Job
 
   def initialize(slack_client = ::Adapters::Slack.new)
