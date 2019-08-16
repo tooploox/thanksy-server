@@ -84,26 +84,6 @@ class SlackPostDialog
         "name": "post_message",
         "value": post.text,
       },
-      {
-        "type": "select",
-        "label": "Delete",
-        "name": "post_destroy",
-        "optional": true,
-        "options": [
-          {
-            "label": "No",
-            "value": "no",
-          },
-          {
-            "label": "Hell no!",
-            "value": "no",
-          },
-          {
-            "label": "Yes, destroy",
-            "value": "yes",
-          },
-        ],
-      },
     ]
   end
 
