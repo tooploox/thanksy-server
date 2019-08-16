@@ -8,8 +8,8 @@ class PostsController < ApplicationController
     render json: active_posts
   end
 
-  def slack_index
-    ListPosts.perform_async(params)
+  def index_for_slack
+    Posts::Index.perform_async(params)
     head :ok
   end
 

@@ -6,7 +6,7 @@ Rails.application.routes.draw do
   post "thanks", to: "thanks#create"
 
   get "posts", to: "posts#index"
-  post "posts", to: "posts#slack_index"
+  post "posts", to: "posts#index_for_slack"
 
   post "posts/list", to: "posts#list"
   post "posts/new", to: "posts#create"
