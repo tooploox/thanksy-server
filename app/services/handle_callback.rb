@@ -33,7 +33,7 @@ class HandleCallback
     when :thanksy_response
       HandleReaction.new.(payload)
     when :post_actions
-      HandlePostAction.new.(payload)
+      HandlePostActions.new.(payload)
     else
       logger.warn "UnknownCallbackId #{payload['callback_id']} for interactive_message"
     end
