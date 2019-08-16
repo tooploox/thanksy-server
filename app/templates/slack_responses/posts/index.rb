@@ -28,10 +28,14 @@ module SlackResponses
       def actions
         [
           {
-            name: "edit",
-            text: ":pencil2: Edit",
+            name: "list",
+            text: ":file_cabinet: Show active and future posts",
             type: "button",
-            value: "1234",
+          },
+          {
+            name: "add",
+            text: ":heavy_plus_sign: Create new post",
+            type: "button",
           },
         ]
       end
