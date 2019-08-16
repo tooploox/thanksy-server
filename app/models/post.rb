@@ -10,6 +10,14 @@ class Post < ApplicationRecord
     (publish_start..publish_end).cover?(DateTime.now)
   end
 
+  def self.active_and_future_posts
+    now = DateTime.now
+    where("
+        (publish_start <= ? AND publish_end >= ?)
+        OR publish_start >= ?", now, now, now)
+      .order(:publish_start)
+  end
+
   private
 
   def default_values

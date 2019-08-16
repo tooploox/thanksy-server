@@ -9,7 +9,8 @@ module Posts
     end
 
     def perform
-      response = SlackResponses::Posts::List.new.()
+      posts = Post.active_and_future_posts
+      response = SlackResponses::Posts::List.new.(posts)
       @slack_client.send(params[:response_url], response)
     end
   end
