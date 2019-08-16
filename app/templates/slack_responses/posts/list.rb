@@ -62,3 +62,5 @@ module SlackResponses
           "#{post.publish_end.strftime('%F %H:%M')}"\
       end
     end
+  end
+end
