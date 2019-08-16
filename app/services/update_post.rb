@@ -14,7 +14,7 @@ class UpdatePost
     if post
       data = payload["submission"]
       if post.update(post_params(data))
-        notify_slack("Post #{post.id}:#{post.title} successfully updated.")
+        notify_slack("Post #{post.title} successfully updated.")
       else
         notify_slack("Error updating Post: #{post.errors}.")
       end
