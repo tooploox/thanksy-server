@@ -18,13 +18,13 @@ class HandlePostActions
   def handle(action)
     case action["name"].to_sym
     when :list
-      Posts::List.perform_async(params)
+      Posts::List.new.perform(params)
     when :add
-      Posts::OpenDialog.perform_async(params)
+      Posts::OpenDialog.new.perform(params)
     when :edit
-      Posts::OpenDialog.perform_async(params.merge(id: action["value"]))
+      Posts::OpenDialog.new.perform(params.merge(id: action["value"]))
     when :destroy
-      Posts::Destroy.perform_async(params.merge(id: action["value"]))
+      Posts::Destroy.new.perform(params.merge(id: action["value"]))
     end
   end
 
