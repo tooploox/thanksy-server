@@ -39,10 +39,10 @@ class HandleCallback
   def handle_dialog(payload)
     case payload["callback_id"].to_sym
     when :post_add
-      CreatePost.perform_async(payload)
+      CreatePost.perform(payload)
       { errors: [], ok: true }
     when :post_edit
-      UpdatePost.perform_async(payload)
+      UpdatePost.perform(payload)
       { errors: [], ok: true }
     else
       logger.warn "UnknownCallbackId #{payload['callback_id']} for dialog_submission"
