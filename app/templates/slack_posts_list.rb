@@ -54,8 +54,8 @@ class SlackPostsList
   end
 
   def info(post)
-    "*#{post.category.humanize}*\n"\
-      "*#{post.title}*\n"\
+    "*#{post.category.humanize}:* "\
+      "#{post.title}\n"\
       "#{post.publish_start.strftime('%F %H:%M')} - "\
       "#{post.publish_end.strftime('%F %H:%M')}"\
   end

@@ -5,7 +5,7 @@ class CallbacksController < ApplicationController
 
   def exec
     data = HandleCallback.new.(params)
-    if data.empty?
+    if data == true || data.empty?
       # Slack Dialogs: to close dialog send status :ok with empty body
       head :ok, content_type: "application/json"
     else
