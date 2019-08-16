@@ -40,10 +40,10 @@ class HandleCallback
     case payload["callback_id"].to_sym
     when :post_add
       CreatePost.new.perform(payload)
-      { errors: [], ok: true }
+      { errors: [ {name: "post_publish_at", error: "Sorry date is not valid"} ] }
     when :post_edit
       UpdatePost.new.perform(payload)
-      { errors: [], ok: true }
+      { errors: [ {name: "post_publish_at", error: "Sorry date is not valid"} ] }
     else
       logger.warn "UnknownCallbackId #{payload['callback_id']} for dialog_submission"
     end
