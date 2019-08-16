@@ -8,6 +8,11 @@ class PostsController < ApplicationController
     render json: active_posts
   end
 
+  def slack_index
+    ListPosts.perform_async(params)
+    head :ok
+  end
+
   def list
     ListPosts.perform_async(params)
     head :ok, content_type: "application/json"

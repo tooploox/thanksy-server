@@ -23,7 +23,8 @@ class ThanksController < ApplicationController
     end
   end
 
-  def update
-    render json: HandleReaction.new.(params)
-  end
+  # TODO: remove it
+  # def update
+  #   render json: HandleReaction.new.(params)
+  # end
 end
