@@ -20,7 +20,7 @@ class SlackPostsList
 
   def post(post)
     {
-      text: "*post.title*\n#{post.publish_start} - #{post.publish_end}",
+      text: info(post),
       fallback: "You are unable to do it, sorry",
       callback_id: "post_actions",
       color: "#e5e5e5",
@@ -38,5 +38,12 @@ class SlackPostsList
         value: post.id,
       },
     ]
+  end
+
+  def info(post)
+    "*#{post.category}*\n"\
+      "*#{post.title}*\n"\
+      "#{post.publish_start.strftime('%F %H:%M')} - "\
+      "#{post.publish_end.strftime('%F %H:%M')}"\
   end
 end
