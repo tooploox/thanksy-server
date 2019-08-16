@@ -23,7 +23,7 @@ class SlackPostsList
       text: info(post),
       fallback: "You are unable to do it, sorry",
       callback_id: "post_actions",
-      color: "#e5e5e5",
+      color: post.active? ? "#228B22" : "#e5e5e5",
       attachment_type: "default",
       actions: actions(post),
     }
@@ -39,7 +39,7 @@ class SlackPostsList
       },
       {
         name: "destroy",
-        text: ":red_circle: Remove",
+        text: ":x: Delete",
         type: "button",
         value: post.id,
         style: "danger",
