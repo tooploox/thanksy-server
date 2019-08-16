@@ -10,8 +10,9 @@ module Posts
       @slack_client = slack_client
     end
 
-    def perform(params, post = nil)
+    def perform(params)
       trigger_id = params[:trigger_id]
+      post = Post.find_by_id(params[:id])
       dialog = if post
                  SlackPostDialog.new.post_edit(trigger_id, post)
                else

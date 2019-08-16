@@ -19,16 +19,16 @@ class HandlePostActions
     case action["name"].to_sym
     when :list
       Posts::List.perform_async(params)
-    when :open_add_dialog
+    when :add
       Posts::OpenDialog.perform_async(params)
+    when :edit
+      Posts::OpenDialog.perform_async(params.merge(id: action["value"]))
+    when :destroy
+      Posts::Destroy.perform_async(params.merge(id: action["value"]))
     end
   end
 
   def params
     { trigger_id: trigger_id, response_url: response_url }
   end
-
-  # def notify_slack(message)
-  #   @slack_client.send(@response_url, text: message)
-  # end
 end
