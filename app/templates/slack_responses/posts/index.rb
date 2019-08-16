@@ -33,7 +33,7 @@ module SlackResponses
             type: "button",
           },
           {
-            name: "add",
+            name: "open_add_dialog",
             text: ":heavy_plus_sign: Create new post",
             type: "button",
           },
