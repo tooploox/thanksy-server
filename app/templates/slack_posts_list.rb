@@ -11,7 +11,7 @@ class SlackPostsList
   private
 
   def list(posts)
-    [].new.tap do |i|
+    [].tap do |i|
       posts.each do |p|
         i << post(p)
       end
