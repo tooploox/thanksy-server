@@ -32,6 +32,8 @@ class HandleCallback
     case payload["callback_id"].to_sym
     when :thanksy_response
       HandleReaction.new.(payload)
+    when :post_actions
+      handle_post_action(payload["actions"])
     else
       logger.warn "UnknownCallbackId #{payload['callback_id']} for interactive_message"
     end
@@ -46,6 +48,11 @@ class HandleCallback
     else
       logger.warn "UnknownCallbackId #{payload['callback_id']} for dialog_submission"
     end
+  end
+
+  def handle_post_actions(actions)
+    puts "Handling post actions"
+    puts YAML.dump actions
   end
 
   def logger
