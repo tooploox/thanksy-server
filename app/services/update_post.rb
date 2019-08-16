@@ -27,6 +27,7 @@ class UpdatePost
     else
       notify_slack("Could not find Post with ID:#{post.id}.")
     end
+    {}
   end
 
   private
@@ -36,6 +37,7 @@ class UpdatePost
     publish_end = publish_at + payload["post_lifespan"].to_i.hours
     [publish_at, publish_end]
   rescue ArgumentError => _
+    puts "RESCUE error"
     [{ name: "post_publish_at", error: "Date format is not valid." }]
   end
 
