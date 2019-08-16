@@ -1,15 +1,6 @@
 # frozen_string_literal: true
 
 class UpdatePost
-  class ValidationError < StandardError
-    attr_reader :payload
-
-    def initialize(payload)
-      super("Validation Error")
-      @payload = payload
-    end
-  end
-
   include SuckerPunch::Job
 
   def initialize(slack_client = ::Adapters::Slack.new)
@@ -46,7 +37,7 @@ class UpdatePost
     [publish_at, publish_end]
   rescue ArgumentError => _
     err = [{ name: "post_publish_at", error: "Date format is not valid." }]
-    raise ValidationError, err
+    raise DialogSubmissionError, err
   end
 
   def post_params(payload)

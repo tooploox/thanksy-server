@@ -1,9 +1,6 @@
 # frozen_string_literal: true
 
 class CreatePost
-  class ValidationError < StandardError
-    attr_accessor :payload
-  end
   include SuckerPunch::Job
 
   def initialize(slack_client = ::Adapters::Slack.new)
@@ -29,7 +26,8 @@ class CreatePost
     publish_end = publish_at + payload["post_lifespan"].to_i.hours
     [publish_at, publish_end]
   rescue ArgumentError => _
-    [{ name: "post_publish_at", error: "Date format is not valid." }]
+    err = [{ name: "post_publish_at", error: "Date format is not valid." }]
+    raise DialogSubmissionError, err
   end
 
   def create_post(author, publish_start, publish_end, payload)
