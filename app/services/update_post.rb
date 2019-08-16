@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class UpdatePost
+  class ValidationError < StandardError
+    attr_accessor :payload
+  end
   include SuckerPunch::Job
 
   def initialize(slack_client = ::Adapters::Slack.new)
@@ -16,12 +19,10 @@ class UpdatePost
       if data["post_destroy"] == "yes"
         post.destroy
         notify_slack("Post #{post.id}:#{post.title} successfully destroyed.")
+      elsif post.update(post_params(data))
+        notify_slack("Post #{post.id}:#{post.title} successfully updated.")
       else
-        if post.update(post_params(data))
-          notify_slack("Post #{post.id}:#{post.title} successfully updated.")
-        else
-          notify_slack("Error updating Post: #{post.errors}.")
-        end
+        notify_slack("Error updating Post: #{post.errors}.")
       end
     else
       notify_slack("Could not find Post with ID:#{post.id}.")
@@ -34,6 +35,8 @@ class UpdatePost
     publish_at = DateTime.parse(payload["post_publish_at"])
     publish_end = publish_at + payload["post_lifespan"].to_i.hours
     [publish_at, publish_end]
+  rescue ArgumentError => _
+    [{ name: "post_publish_at", error: "Date format is not valid." }]
   end
 
   def post_params(payload)
