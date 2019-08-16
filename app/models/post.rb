@@ -18,6 +18,11 @@ class Post < ApplicationRecord
       .order(:publish_start)
   end
 
+  def self.active
+    where("publish_start <= ? AND publish_end >= ?", DateTime.now, DateTime.now)
+      .order(:publish_start)
+  end
+
   private
 
   def default_values
