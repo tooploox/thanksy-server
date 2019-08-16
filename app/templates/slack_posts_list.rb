@@ -32,16 +32,29 @@ class SlackPostsList
   def actions(post)
     [
       {
-        name: "love",
-        text: ":heart: lol",
+        name: "edit",
+        text: ":pencil2: Edit",
         type: "button",
         value: post.id,
+      },
+      {
+        name: "destroy",
+        text: ":red_circle: Remove",
+        type: "button",
+        value: post.id,
+        style: "danger",
+        confirm: {
+          title: "Are you sure?",
+          text: "Sit down, relax and think about it",
+          ok_text: "Yes",
+          dismiss_text: "No",
+        },
       },
     ]
   end
 
   def info(post)
-    "*#{post.category}*\n"\
+    "*#{post.category.humanize}*\n"\
       "*#{post.title}*\n"\
       "#{post.publish_start.strftime('%F %H:%M')} - "\
       "#{post.publish_end.strftime('%F %H:%M')}"\
