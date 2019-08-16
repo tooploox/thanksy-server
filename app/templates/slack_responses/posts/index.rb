@@ -6,7 +6,21 @@ module SlackResponses
       def call
         {
           text: "*Posts:*",
+          actions: actions,
         }
+      end
+
+      private
+
+      def actions
+        [
+          {
+            name: "edit",
+            text: ":pencil2: Edit",
+            type: "button",
+            value: "1234",
+          },
+        ]
       end
     end
   end
