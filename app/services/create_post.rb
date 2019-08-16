@@ -12,9 +12,10 @@ class CreatePost
     data = payload["submission"]
     publish_at, publish_end = publication_dates(data)
     create_post(author, publish_at, publish_end, data)
-    { text: "Post successfully created" }
+    notify_slack(payload["response_url"], "Post successfully created")
+    {}
   rescue FindSlackUsers::SlackUserNotFound => e
-    notify_slack_about_error(payload["response_url"], e.message)
+    notify_slack(payload["response_url"], e.message)
   rescue ValidationError => e
     { errors: e.payload }
   end
@@ -41,7 +42,7 @@ class CreatePost
     )
   end
 
-  def notify_slack_about_error(response_url, message)
+  def notify_slack(response_url, message)
     @slack_client.send(response_url, text: message)
   end
 
