@@ -22,7 +22,7 @@ class UpdatePost
       notify_slack("Could not find Post with ID:#{post.id}.")
     end
     {}
-  rescue ValidationError => e
+  rescue DialogSubmissionError => e
     { errors: e.payload }
   end
 

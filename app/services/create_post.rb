@@ -16,7 +16,7 @@ class CreatePost
     {}
   rescue FindSlackUsers::SlackUserNotFound => e
     notify_slack(payload["response_url"], e.message)
-  rescue ValidationError => e
+  rescue DialogSubmissionError => e
     { errors: e.payload }
   end
 

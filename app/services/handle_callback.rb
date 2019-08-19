@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class HandleCallback
-
   def initialize(slack_client = ::Adapters::Slack.new)
     @slack_client = slack_client
   end
