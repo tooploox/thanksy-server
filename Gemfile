@@ -8,7 +8,7 @@ ruby "2.6.1"
 gem "bootsnap", ">= 1.1.0", require: false
 gem "faraday"
 gem "pg"
-gem "puma", "~> 3.11"
+gem "puma", "~> 3.12"
 gem "rack-cors"
 gem "rails", "~> 5.2.2"
 gem "slack-ruby-client"
